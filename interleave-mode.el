@@ -1,6 +1,5 @@
 
-(make-variable-buffer-local
- (defvar *interleave-org-buf* nil "The Org Buffer"))
+(defvar *interleave--org-buf* nil "The Org Buffer")
 
 (defun interleave-find-pdf-path (buffer)
   (with-current-buffer buffer
@@ -26,7 +25,7 @@
 
 (defun interleave-quit ()
   (interactive)
-  (with-current-buffer *interleave-org-buf*
+  (with-current-buffer *interleave--org-buf*
     (interleave-mode 0))
   (doc-view-kill-proc-and-buffer)
   (delete-window))
@@ -35,7 +34,7 @@
   "Interleeaving your text books scince 2015"
   :lighter " Interleave"
   (when interleave-mode
-    (setq *interleave-org-buf* (current-buffer))
+    (setq *interleave--org-buf* (current-buffer))
     (interleave-open-file)))
 
 (define-minor-mode interleave-docview-mode
