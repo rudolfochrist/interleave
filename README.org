@@ -3,19 +3,45 @@
 
 Some history, what this is all about...
 
-In the past, textbooks were sometimes published as /interleaved/ editions. That meant, each page was followed by a blank page and the ambitious student/scholar had the abillity to take his notes directly in her copy of the textbook. Newton and Kant were prominent representatives of this technique [fn:blumbach].
+In the past, textbooks were sometimes published as /interleaved/ editions. That meant, each page was followed by a blank page and the ambitious student/scholar had the ability to take his notes directly in her copy of the textbook. Newton and Kant were prominent representatives of this technique [fn:blumbach].
 
-Nowadays textbooks (or lecture material) come in PDF format. Although almost every PDF has the ability to add some notes to the PDF itself, it is not as powerfull as it could be. This is what this [[https://www.gnu.org/software/emacs/][Emacs]] minor mode tries to accomplish. It presents your PDF side by side to an [[http://orgmode.org][Org Mode]] buffer with you notes. Narrowing down to just those passages that are relevant to this paticular page in the document viewer.
+Nowadays textbooks (or lecture material) come in PDF format. Although almost every PDF has the ability to add some notes to the PDF itself, it is not as powerful as it could be. This is what this [[https://www.gnu.org/software/emacs/][Emacs]] minor mode tries to accomplish. It presents your PDF side by side to an [[http://orgmode.org][Org Mode]] buffer with you notes. Narrowing down to just those passages that are relevant to this particular page in the document viewer.
 
 In a later step it should be possible to created truly /interleaved/ PDFs with you notes.
 
-* Intallation
+* Installation
+
+*Please note: * This is still very alpha and will change a lot. So be cautious.
 
 tbd.
 
 * Usage
 
-tbd.
+Create a org file that will keep your notes. In the Org header section (=#+TITLE=, =#+AUTHOR=, etc.) add
+
+#+BEGIN_SRC
+#+INTERLEAVE_PDF: /the/path/to/pdf.pdf
+#+END_SRC
+
+Then you can start *interleave-mode* by typing
+
+#+BEGIN_SRC
+M-x interleave-mode
+#+END_SRC
+
+This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual with =n= and =p=. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
+
+Typing =q= in the /DocView/ will quit *interleave-mode*
+
+* todo
+
+Some todos:
+
+- [ ] switch/narrow to note section for pdf page, after =n= or =p= has been typed.
+- [ ] =q= should widen region.
+- [ ] actual pdf generation and interleaving.
+- [ ] error handling on missing path to pdfs
+
 
 * License
 
