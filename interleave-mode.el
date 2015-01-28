@@ -12,7 +12,7 @@
 (defun interleave-open-file ()
   (let ((buf (current-buffer)))
     (split-window-right)
-    (find-file (interleave-find-pdf-path buf))
+    (find-file (expand-file-name (interleave-find-pdf-path buf)))
     (interleave-docview-mode 1)))
 
 (defun interleave-go-to-next-page ()
