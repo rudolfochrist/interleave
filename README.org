@@ -41,6 +41,7 @@ Some todos:
 - [ ] =q= should widen region.
 - [ ] actual pdf generation and interleaving.
 - [ ] error handling on missing path to pdfs
+- [ ] defcustom to automatically sort notes
 
 
 * License
