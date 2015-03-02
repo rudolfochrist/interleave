@@ -37,12 +37,10 @@ Typing =q= in the /DocView/ will quit *interleave-mode*
 
 Some todos:
 
-- [ ] switch/narrow to note section for pdf page, after =n= or =p= has been typed.
-- [ ] =q= should widen region.
+- [X] switch/narrow to note section for pdf page, after =n= or =p= has been typed.
+- [X] =q= should widen region.
 - [ ] actual pdf generation and interleaving.
-- [ ] error handling on missing path to pdfs
-- [ ] defcustom to automatically sort notes
-
+- [X] error handling on missing path to pdfs
 
 * License
 
