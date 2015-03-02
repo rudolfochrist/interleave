@@ -13,22 +13,35 @@
   (let ((buf (current-buffer)))
     (condition-case nil
         (progn
-          (find-file (expand-file-name (interleave-find-pdf-path buf)))
           (split-window-right)
+          (find-file (expand-file-name (interleave-find-pdf-path buf)))
           (interleave-docview-mode 1))
-      ('error (message "Please specify PDF file with #+INTERLEAVE_PDF document property."))))))
+      ('error (message "Please specify PDF file with #+INTERLEAVE_PDF document property.")
+              (interleave-quit)))))
+
+(defun interleave-go-to-page-note (page)
+  (with-current-buffer *interleave--org-buf*
+      (save-excursion
+        (goto-char (point-min))
+        (widen)
+        (when (re-search-forward (format "^:interleave_page_note: %d" page) nil t)
+          (org-narrow-to-subtree)
+          (org-show-entry)))))
 
 (defun interleave-go-to-next-page ()
   (interactive)
-  (doc-view-next-page))
+  (doc-view-next-page)
+  (interleave-go-to-page-note (doc-view-current-page)))
 
 (defun interleave-go-to-previous-page ()
   (interactive)
-  (doc-view-previous-page))
+  (doc-view-previous-page)
+  (interleave-go-to-page-note (doc-view-current-page)))
 
 (defun interleave-quit ()
   (interactive)
   (with-current-buffer *interleave--org-buf*
+    (widen)
     (interleave-mode 0))
   (doc-view-kill-proc-and-buffer)
   (delete-window))
@@ -47,6 +60,7 @@
             (define-key map (kbd "n") 'interleave-go-to-next-page)
             (define-key map (kbd "p") 'interleave-go-to-previous-page)
             (define-key map (kbd "q") 'interleave-quit)
+            (define-key map (kbd "i") 'interleave-add-note)
             map))
 
 
