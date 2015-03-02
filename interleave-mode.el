@@ -11,9 +11,12 @@
 
 (defun interleave-open-file ()
   (let ((buf (current-buffer)))
-    (split-window-right)
-    (find-file (expand-file-name (interleave-find-pdf-path buf)))
-    (interleave-docview-mode 1)))
+    (condition-case nil
+        (progn
+          (find-file (expand-file-name (interleave-find-pdf-path buf)))
+          (split-window-right)
+          (interleave-docview-mode 1))
+      ('error (message "Please specify PDF file with #+INTERLEAVE_PDF document property."))))))
 
 (defun interleave-go-to-next-page ()
   (interactive)
