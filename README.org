@@ -48,6 +48,10 @@ Some todos:
 
 See [[file:LICENSE][LICENSE]]
 
+* References
+
+- [[http://orgmode.org/worg/org-tutorials/advanced-searching.html][org-mode Advances Search]]
+
 * Footnotes
 
 [fn:blumbach] For some more information see: [[http://takingnotenow.blogspot.de/2008/07/note-keeping-in-1786-blumenbachs-system.html]]
