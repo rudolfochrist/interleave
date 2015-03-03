@@ -26,7 +26,19 @@
         (widen)
         (when (re-search-forward (format "^:interleave_page_note: %d" page) nil t)
           (org-narrow-to-subtree)
-          (org-show-entry)))))
+          (quitorg-show-entry)
+          t))))
+
+(defun interleave-create-new-note (page)
+  (with-current-buffer *interleave--org-buf*
+    (save-excursion
+      (widen)
+      (end-of-buffer)
+      (org-insert-heading-respect-content)
+      (insert (format "Notes for page %d" page))
+      (org-set-property "interleave_page_note" (number-to-string page))
+      (org-narrow-to-subtree)
+      (other-window 1))))
 
 (defun interleave-go-to-next-page ()
   (interactive)
@@ -37,6 +49,15 @@
   (interactive)
   (doc-view-previous-page)
   (interleave-go-to-page-note (doc-view-current-page)))
+
+(defun interleave-add-note ()
+  (interactive)
+  (let ((page (doc-view-current-page)))
+    (with-current-buffer *interleave--org-buf*
+      (save-excursion
+        (if (interleave-go-to-page-note page)
+            (other-window 1)
+          (interleave-create-new-note page))))))
 
 (defun interleave-quit ()
   (interactive)
