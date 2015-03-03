@@ -41,7 +41,7 @@ Some todos:
 - [X] =q= should widen region.
 - [ ] actual pdf generation and interleaving.
 - [X] error handling on missing path to pdfs
-- [ ] add function to insert a new node. If the org-buffer has already the right note, it just switches to it.
+- [X] add function to insert a new node. If the org-buffer has already the right note, it just switches to it.
 
 * License
 
