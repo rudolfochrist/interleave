@@ -4,3 +4,5 @@
 - [X] error handling on missing path to pdfs
 - [X] add function to insert a new node. If the org-buffer has already the right note, it just switches to it.
 - [ ] split hotizontally if invoked with negative prefix
+- [ ] Add docstrings
+- [ ] add package to melpa
