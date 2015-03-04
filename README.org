@@ -33,16 +33,6 @@ This will display the PDF side by side to the org buffer for your notes. You can
 
 Typing =q= in the /DocView/ will quit *interleave-mode*
 
-* todo
-
-Some todos:
-
-- [X] switch/narrow to note section for pdf page, after =n= or =p= has been typed.
-- [X] =q= should widen region.
-- [ ] actual pdf generation and interleaving.
-- [X] error handling on missing path to pdfs
-- [X] add function to insert a new node. If the org-buffer has already the right note, it just switches to it.
-
 * License
 
 See [[file:LICENSE][LICENSE]]
