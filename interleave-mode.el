@@ -26,7 +26,7 @@
         (widen)
         (when (re-search-forward (format "^:interleave_page_note: %d" page) nil t)
           (org-narrow-to-subtree)
-          (quitorg-show-entry)
+          (org-show-entry)
           t))))
 
 (defun interleave-create-new-note (page)
