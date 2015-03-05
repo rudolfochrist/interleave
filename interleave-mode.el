@@ -73,7 +73,7 @@ to PAGE. It narrows the subtree when found."
   (with-current-buffer *interleave--org-buf*
     (save-excursion
       (widen)
-      (end-of-buffer)
+      (goto-char (point-max))
       (org-insert-heading-respect-content)
       (insert (format "Notes for page %d" page))
       (org-set-property "interleave_page_note" (number-to-string page))
@@ -132,7 +132,6 @@ jump to the notes buffer."
 (define-minor-mode interleave-mode
   "Interleaving your text books since 2015."
   :lighter " Interleave"
-  (interactive "P")
   (when interleave-mode
     (setq *interleave--org-buf* (current-buffer))
     (interleave-open-file (or (and current-prefix-arg 'split-window-below)
