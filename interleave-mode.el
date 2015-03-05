@@ -84,6 +84,7 @@
   (doc-view-kill-proc-and-buffer)
   (delete-window))
 
+;;;###autoload
 (define-minor-mode interleave-mode
   "Interleeaving your text books scince 2015"
   :lighter " Interleave"
@@ -92,7 +93,7 @@
     (setq *interleave--org-buf* (current-buffer))
     (interleave-open-file (or (and current-prefix-arg 'split-window-below)
                               'split-window-right))))
-
+;;;###autoload
 (define-minor-mode interleave-docview-mode
   "Interleave view for doc-view"
   :lighter " Interleave-DocView"
