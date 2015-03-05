@@ -3,6 +3,7 @@
 ;; Author: Sebastian Christ <rudolfo.christ@gmail.com>
 ;; URL: https://github.com/rudolfochrist/interleave-mode
 ;; Version: 0.1
+;; Packages-Requires: ((org-mode "8.2.10"))
 
 ;; This file is not part of GNU Emacs
 
@@ -26,6 +27,9 @@
 ;; display your PDF and notes side by side.
 
 ;;; Code:
+
+(require 'org)
+(require 'doc-view)
 
 (defvar *interleave--org-buf* nil "The Org Buffer")
 
