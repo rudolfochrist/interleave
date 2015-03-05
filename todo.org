@@ -5,5 +5,5 @@
 - [ ] actual pdf generation and interleaving.
 - [X] split hotizontally if invoked with negative prefix
 - [X] add bindings for continious scrolling mode
-- [ ] Add docstrings
+- [X] Add docstrings
 - [ ] add package to melpa
