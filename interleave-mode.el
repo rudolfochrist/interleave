@@ -2,9 +2,11 @@
 (defvar *interleave--org-buf* nil "The Org Buffer")
 
 (make-variable-buffer-local
- (defvar *interleave-page-marker* 0))
+ (defvar *interleave-page-marker* 0
+   "Caches the current page while scrolling"))
 
 (defun interleave-find-pdf-path (buffer)
+  "Searches for the 'interleave_pdf' property in BUFFER and extracts it when found"
   (with-current-buffer buffer
     (save-excursion
       (goto-char (point-min))
@@ -13,6 +15,10 @@
         (match-string 1)))))
 
 (defun interleave-open-file (split-window)
+  "Opens the interleave pdf filer in doc-view besides the notes buffer.
+
+SPLIT-WINDOW is a function that actually splits the window, so it must be either
+`split-window-right' or `split-window-below'."
   (let ((buf (current-buffer)))
     (condition-case nil
         (progn
@@ -23,6 +29,8 @@
               (interleave-quit)))))
 
 (defun interleave-go-to-page-note (page)
+  "Searchs the notes buffer for an headline with the 'inerleave_page_note' property set
+to PAGE. It narrows the subtree when found."
   (with-current-buffer *interleave--org-buf*
       (save-excursion
         (widen)
@@ -33,6 +41,7 @@
           t))))
 
 (defun interleave-create-new-note (page)
+  "Creates a new headline for the page PAGE."
   (with-current-buffer *interleave--org-buf*
     (save-excursion
       (widen)
@@ -44,16 +53,19 @@
       (other-window 1))))
 
 (defun interleave-go-to-next-page ()
+  "Go to the next page in PDF. Lookup for available notes."
   (interactive)
   (doc-view-next-page)
   (interleave-go-to-page-note (doc-view-current-page)))
 
 (defun interleave-go-to-previous-page ()
+  "Go to the previous page in PDF. Lookup for available notes."
   (interactive)
   (doc-view-previous-page)
   (interleave-go-to-page-note (doc-view-current-page)))
 
 (defun interleave-scroll-up ()
+  "Scroll up the PDF. Lookup for available notes."
   (interactive)
   (setq *interleave-page-marker* (doc-view-current-page))
   (doc-view-scroll-up-or-next-page)
@@ -61,6 +73,7 @@
     (interleave-go-to-page-note (doc-view-current-page))))
 
 (defun interleave-scroll-down ()
+  "Scroll down the PDF. Lookup for available notes."
   (interactive)
   (setq *interleave-page-marker* (doc-view-current-page))
   (doc-view-scroll-down-or-previous-page)
@@ -68,6 +81,8 @@
     (interleave-go-to-page-note (doc-view-current-page))))
 
 (defun interleave-add-note ()
+  "Add note for the current page. If there are alaready notes for this page,
+jump to the notes buffer."
   (interactive)
   (let ((page (doc-view-current-page)))
     (with-current-buffer *interleave--org-buf*
@@ -77,6 +92,7 @@
           (interleave-create-new-note page))))))
 
 (defun interleave-quit ()
+  "Quit interleave mode."
   (interactive)
   (with-current-buffer *interleave--org-buf*
     (widen)
@@ -86,7 +102,7 @@
 
 ;;;###autoload
 (define-minor-mode interleave-mode
-  "Interleeaving your text books scince 2015"
+  "Interleaving your text books scince 2015."
   :lighter " Interleave"
   (interactive "P")
   (when interleave-mode
