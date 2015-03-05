@@ -24,7 +24,7 @@
       (save-excursion
         (goto-char (point-min))
         (widen)
-        (when (re-search-forward (format "^:interleave_page_note: %d" page) nil t)
+        (when (re-search-forward (format "^:interleave_page_note: %d$" page) nil t)
           (org-narrow-to-subtree)
           (org-show-entry)
           t))))
