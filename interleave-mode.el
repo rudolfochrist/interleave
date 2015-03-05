@@ -15,7 +15,7 @@
         (match-string 1)))))
 
 (defun interleave-open-file (split-window)
-  "Opens the interleave pdf filer in doc-view besides the notes buffer.
+  "Opens the interleave pdf file in doc-view besides the notes buffer.
 
 SPLIT-WINDOW is a function that actually splits the window, so it must be either
 `split-window-right' or `split-window-below'."
@@ -29,7 +29,7 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
               (interleave-quit)))))
 
 (defun interleave-go-to-page-note (page)
-  "Searchs the notes buffer for an headline with the 'inerleave_page_note' property set
+  "Searches the notes buffer for an headline with the 'interleave_page_note' property set
 to PAGE. It narrows the subtree when found."
   (with-current-buffer *interleave--org-buf*
       (save-excursion
@@ -53,19 +53,19 @@ to PAGE. It narrows the subtree when found."
       (other-window 1))))
 
 (defun interleave-go-to-next-page ()
-  "Go to the next page in PDF. Lookup for available notes."
+  "Go to the next page in PDF. Look up for available notes."
   (interactive)
   (doc-view-next-page)
   (interleave-go-to-page-note (doc-view-current-page)))
 
 (defun interleave-go-to-previous-page ()
-  "Go to the previous page in PDF. Lookup for available notes."
+  "Go to the previous page in PDF. Look up for available notes."
   (interactive)
   (doc-view-previous-page)
   (interleave-go-to-page-note (doc-view-current-page)))
 
 (defun interleave-scroll-up ()
-  "Scroll up the PDF. Lookup for available notes."
+  "Scroll up the PDF. Look up for available notes."
   (interactive)
   (setq *interleave-page-marker* (doc-view-current-page))
   (doc-view-scroll-up-or-next-page)
@@ -73,7 +73,7 @@ to PAGE. It narrows the subtree when found."
     (interleave-go-to-page-note (doc-view-current-page))))
 
 (defun interleave-scroll-down ()
-  "Scroll down the PDF. Lookup for available notes."
+  "Scroll down the PDF. Look up for available notes."
   (interactive)
   (setq *interleave-page-marker* (doc-view-current-page))
   (doc-view-scroll-down-or-previous-page)
@@ -81,7 +81,7 @@ to PAGE. It narrows the subtree when found."
     (interleave-go-to-page-note (doc-view-current-page))))
 
 (defun interleave-add-note ()
-  "Add note for the current page. If there are alaready notes for this page,
+  "Add note for the current page. If there are already notes for this page,
 jump to the notes buffer."
   (interactive)
   (let ((page (doc-view-current-page)))
@@ -102,7 +102,7 @@ jump to the notes buffer."
 
 ;;;###autoload
 (define-minor-mode interleave-mode
-  "Interleaving your text books scince 2015."
+  "Interleaving your text books since 2015."
   :lighter " Interleave"
   (interactive "P")
   (when interleave-mode
