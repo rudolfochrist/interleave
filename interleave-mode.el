@@ -1,3 +1,31 @@
+;;; interleave-mode.el --- Interleaving text books since 2015
+
+;; Author: Sebastian Christ <rudolfo.christ@gmail.com>
+;; URL: https://github.com/rudolfochrist/interleave-mode
+;; Version: 0.1
+
+;; This file is not part of GNU Emacs
+
+;; This file is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation; either version 3, or (at your option)
+;; any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; For a full copy of the GNU General Public License
+;; see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+;;
+;; After setting the #+INTERLEAVE_PDF property in the header section of you org file to the PDF file
+;; you'd like to use you can run M-x interleave-mode RET to start up interleave mode. This will
+;; display your PDF and notes side by side.
+
+;;; Code:
 
 (defvar *interleave--org-buf* nil "The Org Buffer")
 
@@ -125,3 +153,5 @@ jump to the notes buffer."
 
 
 (provide 'interleave-mode)
+
+;;; interleave-mode.el ends here
