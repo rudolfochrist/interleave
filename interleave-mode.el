@@ -1,6 +1,9 @@
 
 (defvar *interleave--org-buf* nil "The Org Buffer")
 
+(make-variable-buffer-local
+ (defvar *interleave-page-marker* 0))
+
 (defun interleave-find-pdf-path (buffer)
   (with-current-buffer buffer
     (save-excursion
@@ -22,8 +25,8 @@
 (defun interleave-go-to-page-note (page)
   (with-current-buffer *interleave--org-buf*
       (save-excursion
-        (goto-char (point-min))
         (widen)
+        (goto-char (point-min))
         (when (re-search-forward (format "^:interleave_page_note: %d$" page) nil t)
           (org-narrow-to-subtree)
           (org-show-entry)
@@ -52,13 +55,17 @@
 
 (defun interleave-scroll-up ()
   (interactive)
+  (setq *interleave-page-marker* (doc-view-current-page))
   (doc-view-scroll-up-or-next-page)
-  (interleave-go-to-page-note (doc-view-current-page)))
+  (unless (= *interleave-page-marker* (doc-view-current-page))
+    (interleave-go-to-page-note (doc-view-current-page))))
 
 (defun interleave-scroll-down ()
   (interactive)
+  (setq *interleave-page-marker* (doc-view-current-page))
   (doc-view-scroll-down-or-previous-page)
-  (interleave-go-to-page-note (doc-view-current-page)))
+  (unless (= *interleave-page-marker* (doc-view-current-page))
+    (interleave-go-to-page-note (doc-view-current-page))))
 
 (defun interleave-add-note ()
   (interactive)
