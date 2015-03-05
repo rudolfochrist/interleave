@@ -26,11 +26,11 @@ Then you can start *interleave-mode* by typing
 M-x interleave-mode
 #+END_SRC
 
-This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual with <kbd>n</kbd> and <kbd>p</kbd>. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
+This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual with ~n~ and ~p~. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
 
-If you want to add some notes to the current page you can type <kbd>i</kbd>. This will create a new headline for your notes. If some notes are already present, <kbd>i</kbd> will swith over to the other buffer.
+If you want to add some notes to the current page you can type <kbd>i</kbd>. This will create a new headline for your notes. If some notes are already present, ~i~ will swith over to the other buffer.
 
-Typing <kbd>q</kbd> in the /DocView/ will quit *interleave-mode*.
+Typing ~q~in the /DocView/ will quit *interleave-mode*.
 
 * Footnotes
 
