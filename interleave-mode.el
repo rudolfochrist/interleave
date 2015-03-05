@@ -3,7 +3,6 @@
 ;; Author: Sebastian Christ <rudolfo.christ@gmail.com>
 ;; URL: https://github.com/rudolfochrist/interleave-mode
 ;; Version: 0.1
-;; Packages-Requires: ((org-mode "8.2.10"))
 
 ;; This file is not part of GNU Emacs
 
