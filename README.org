@@ -1,4 +1,3 @@
-
 * Interleaved Textbooks?
 
 Some history, what this is all about...
@@ -32,14 +31,6 @@ M-x interleave-mode
 This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual with =n= and =p=. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
 
 Typing =q= in the /DocView/ will quit *interleave-mode*
-
-* License
-
-See [[file:LICENSE][LICENSE]]
-
-* References
-
-- [[http://orgmode.org/worg/org-tutorials/advanced-searching.html][org-mode Advances Search]]
 
 * Footnotes
 
