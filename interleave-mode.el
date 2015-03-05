@@ -50,6 +50,16 @@
   (doc-view-previous-page)
   (interleave-go-to-page-note (doc-view-current-page)))
 
+(defun interleave-scroll-up ()
+  (interactive)
+  (doc-view-scroll-up-or-next-page)
+  (interleave-go-to-page-note (doc-view-current-page)))
+
+(defun interleave-scroll-down ()
+  (interactive)
+  (doc-view-scroll-down-or-previous-page)
+  (interleave-go-to-page-note (doc-view-current-page)))
+
 (defun interleave-add-note ()
   (interactive)
   (let ((page (doc-view-current-page)))
@@ -82,6 +92,9 @@
             (define-key map (kbd "p") 'interleave-go-to-previous-page)
             (define-key map (kbd "q") 'interleave-quit)
             (define-key map (kbd "i") 'interleave-add-note)
+            (define-key map (kbd "SPC") 'interleave-scroll-up)
+            (define-key map (kbd "S-SPC") 'interleave-scroll-down)
+            (define-key map (kbd "DEL") 'interleave-scroll-down)
             map))
 
 
