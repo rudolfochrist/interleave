@@ -9,11 +9,11 @@
       (when (match-string 0)
         (match-string 1)))))
 
-(defun interleave-open-file ()
+(defun interleave-open-file (split-window)
   (let ((buf (current-buffer)))
     (condition-case nil
         (progn
-          (split-window-right)
+          (funcall split-window)
           (find-file (expand-file-name (interleave-find-pdf-path buf)))
           (interleave-docview-mode 1))
       ('error (message "Please specify PDF file with #+INTERLEAVE_PDF document property.")
@@ -80,9 +80,11 @@
 (define-minor-mode interleave-mode
   "Interleeaving your text books scince 2015"
   :lighter " Interleave"
+  (interactive "P")
   (when interleave-mode
     (setq *interleave--org-buf* (current-buffer))
-    (interleave-open-file)))
+    (interleave-open-file (or (and current-prefix-arg 'split-window-below)
+                              'split-window-right))))
 
 (define-minor-mode interleave-docview-mode
   "Interleave view for doc-view"
