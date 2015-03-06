@@ -14,7 +14,7 @@ In a later step it should be possible to created truly /interleaved/ PDFs with y
 
 * Usage
 
-Create a org file that will keep your notes. In the Org header section (=#+TITLE=, =#+AUTHOR=, etc.) add
+Create a Org file that will keep your notes. In the Org header section (=#+TITLE=, =#+AUTHOR=, etc.) add
 
 #+BEGIN_SRC
 #+INTERLEAVE_PDF: /the/path/to/pdf.pdf
