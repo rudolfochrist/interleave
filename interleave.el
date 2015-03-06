@@ -1,7 +1,7 @@
-;;; interleave-mode.el --- Interleaving text books since 2015
+;;; interleave.el --- Interleaving text books since 2015
 
 ;; Author: Sebastian Christ <rudolfo.christ@gmail.com>
-;; URL: https://github.com/rudolfochrist/interleave-mode
+;; URL: https://github.com/rudolfochrist/interleave
 ;; Version: 0.1
 
 ;; This file is not part of GNU Emacs
@@ -22,7 +22,7 @@
 ;;; Commentary:
 ;;
 ;; After setting the #+INTERLEAVE_PDF property in the header section of you org file to the PDF file
-;; you'd like to use you can run M-x interleave-mode RET to start up interleave mode. This will
+;; you'd like to use you can run M-x interleave RET to start up interleave mode. This will
 ;; display your PDF and notes side by side.
 
 ;;; Code:
@@ -127,15 +127,15 @@ jump to the notes buffer."
   (interactive)
   (with-current-buffer *interleave--org-buf*
     (widen)
-    (interleave-mode 0))
+    (interleave 0))
   (doc-view-kill-proc-and-buffer)
   (delete-window))
 
 ;;;###autoload
-(define-minor-mode interleave-mode
+(define-minor-mode interleave
   "Interleaving your text books since 2015."
   :lighter " Interleave"
-  (when interleave-mode
+  (when interleave
     (setq *interleave--org-buf* (current-buffer))
     (interleave-open-file (or (and current-prefix-arg 'split-window-below)
                               'split-window-right))))
@@ -154,6 +154,6 @@ jump to the notes buffer."
             map))
 
 
-(provide 'interleave-mode)
+(provide 'interleave)
 
-;;; interleave-mode.el ends here
+;;; interleave.el ends here

@@ -20,17 +20,17 @@ Create a org file that will keep your notes. In the Org header section (=#+TITLE
 #+INTERLEAVE_PDF: /the/path/to/pdf.pdf
 #+END_SRC
 
-Then you can start *interleave-mode* by typing
+Then you can start *interleave* by typing
 
 #+BEGIN_SRC
-M-x interleave-mode
+M-x interleave
 #+END_SRC
 
 This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual with ~n~ and ~p~. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
 
 If you want to add some notes to the current page you can type ~i~. This will create a new headline for your notes. If some notes are already present, ~i~ will switch over to the other buffer.
 
-Typing ~q~ in the /DocView/ will quit *interleave-mode*.
+Typing ~q~ in the /DocView/ will quit *interleave*.
 
 * Footnotes
 
