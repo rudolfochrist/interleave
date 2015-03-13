@@ -145,7 +145,7 @@ jump to the notes buffer."
 
   (add-hook 'pdf-view-change-page-hook 'interleave-pdf-view-after-page)
 
-  (defun interleave-add-note ()
+  (defun interleave-add-note-pdf-view ()
     "Add note for the current page. If there are already notes for this page,
 jump to the notes buffer. Applies if `pdf-tools' are installed."
     (interactive)
@@ -197,13 +197,17 @@ Navigation is the same as in `doc-view-mode'."
   "Interleave view for doc-view"
   :lighter " Interleave-DocView"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "n") 'interleave-go-to-next-page)
-            (define-key map (kbd "p") 'interleave-go-to-previous-page)
             (define-key map (kbd "q") 'interleave-quit)
-            (define-key map (kbd "i") 'interleave-add-note)
-            (define-key map (kbd "SPC") 'interleave-scroll-up)
-            (define-key map (kbd "S-SPC") 'interleave-scroll-down)
-            (define-key map (kbd "DEL") 'interleave-scroll-down)
+            (if (featurep 'pdf-view)
+                (progn
+                  (define-key map (kbd "n") 'interleave-go-to-next-page)
+                  (define-key map (kbd "p") 'interleave-go-to-previous-page)
+                  (define-key map (kbd "SPC") 'interleave-scroll-up)
+                  (define-key map (kbd "S-SPC") 'interleave-scroll-down)
+                  (define-key map (kbd "DEL") 'interleave-scroll-down)
+                  (define-key map (kbd "i") 'interleave-add-note))
+              (progn
+                (define-key map (kbd "i") 'interleave-add-note-pdf-view)))
             map))
 
 
