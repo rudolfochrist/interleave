@@ -1,3 +1,5 @@
+[[http://melpa.org/#/interleave][file:http://melpa.org/packages/interleave-badge.svg]]
+
 * Interleaved Textbooks?
 
 Some history, what this is all about...
@@ -10,7 +12,19 @@ In a later step it should be possible to created truly /interleaved/ PDFs with y
 
 * Installation
 
-[[http://melpa.org/][MELPA]] pending.
+Add MELPA to your package archives in your init file
+
+#+BEGIN_SRC emacs-lisp
+(package-initialize)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
+#+END_SRC
+
+Then install *interleave* with
+
+#+BEGIN_EXAMPLE
+M-x package-install RET interleave RET
+#+END_EXAMPLE
 
 * Usage
 
