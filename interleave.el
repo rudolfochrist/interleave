@@ -126,6 +126,46 @@ to PAGE. It narrows the subtree when found."
   (unless (= *interleave-page-marker* (doc-view-current-page))
     (interleave-go-to-page-note (doc-view-current-page))))
 
+(when (featurep 'pdf-view) ; if `pdf-tools' is installed
+  (defun interleave-go-to-next-page ()
+    "Go to the next page in PDF. Look up for available notes."
+    (interactive)
+    (pdf-view-next-page-command 1)
+    (interleave-go-to-page-note (pdf-view-current-page)))
+
+  (defun interleave-go-to-previous-page ()
+    "Go to the previous page in PDF. Look up for available notes."
+    (interactive)
+    (pdf-view-previous-page-command 1)
+    (interleave-go-to-page-note (pdf-view-current-page)))
+
+  (defun interleave-scroll-up ()
+    "Scroll up the PDF. Look up for available notes."
+    (interactive)
+    (setq *interleave-page-marker* (pdf-view-current-page))
+    (pdf-view-scroll-up-or-next-page)
+    (unless (= *interleave-page-marker* (pdf-view-current-page))
+      (interleave-go-to-page-note (pdf-view-current-page))))
+
+  (defun interleave-scroll-down ()
+    "Scroll down the PDF. Look up for available notes."
+    (interactive)
+    (setq *interleave-page-marker* (pdf-view-current-page))
+    (pdf-view-scroll-down-or-previous-page)
+    (unless (= *interleave-page-marker* (pdf-view-current-page))
+      (interleave-go-to-page-note (pdf-view-current-page))))
+
+  (defun interleave-add-note ()
+    "Add note for the current page. If there are already notes for this page,
+jump to the notes buffer."
+    (interactive)
+    (let ((page (pdf-view-current-page)))
+      (with-current-buffer *interleave--org-buf*
+        (save-excursion
+          (if (interleave-go-to-page-note page)
+              (other-window 1)
+            (interleave-create-new-note page)))))))
+
 (defun interleave-add-note ()
   "Add note for the current page. If there are already notes for this page,
 jump to the notes buffer."
