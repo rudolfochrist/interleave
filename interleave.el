@@ -200,14 +200,14 @@ Navigation is the same as in `doc-view-mode'."
             (define-key map (kbd "q") 'interleave-quit)
             (if (featurep 'pdf-view)
                 (progn
+                  (define-key map (kbd "i") 'interleave-add-note-pdf-view))
+              (progn
                   (define-key map (kbd "n") 'interleave-go-to-next-page)
                   (define-key map (kbd "p") 'interleave-go-to-previous-page)
                   (define-key map (kbd "SPC") 'interleave-scroll-up)
                   (define-key map (kbd "S-SPC") 'interleave-scroll-down)
                   (define-key map (kbd "DEL") 'interleave-scroll-down)
-                  (define-key map (kbd "i") 'interleave-add-note))
-              (progn
-                (define-key map (kbd "i") 'interleave-add-note-pdf-view)))
+                  (define-key map (kbd "i") 'interleave-add-note)))
             map))
 
 
