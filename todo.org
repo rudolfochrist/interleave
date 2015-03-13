@@ -1,9 +1,0 @@
-- [X] switch/narrow to note section for pdf page, after =n= or =p= has been typed.
-- [X] =q= should widen region.
-- [X] error handling on missing path to pdfs
-- [X] add function to insert a new node. If the org-buffer has already the right note, it just switches to it.
-- [ ] actual pdf generation and interleaving.
-- [X] split hotizontally if invoked with negative prefix
-- [X] add bindings for continious scrolling mode
-- [X] Add docstrings
-- [ ] add package to melpa
