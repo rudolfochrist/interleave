@@ -43,7 +43,9 @@
 ;;; Code:
 
 (require 'org)
-(require 'doc-view)
+
+(when (not (featurep 'pdf-view))
+  (require 'doc-view))
 
 (defvar *interleave--org-buf* nil "The Org Buffer")
 
@@ -78,13 +80,13 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
   "Searches the notes buffer for an headline with the 'interleave_page_note' property set
 to PAGE. It narrows the subtree when found."
   (with-current-buffer *interleave--org-buf*
-      (save-excursion
-        (widen)
-        (goto-char (point-min))
-        (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$" page) nil t)
-          (org-narrow-to-subtree)
-          (org-show-entry)
-          t))))
+    (save-excursion
+      (widen)
+      (goto-char (point-min))
+      (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$" page) nil t)
+        (org-narrow-to-subtree)
+        (org-show-entry)
+        t))))
 
 (defun interleave-create-new-note (page)
   "Creates a new headline for the page PAGE."
@@ -98,63 +100,85 @@ to PAGE. It narrows the subtree when found."
       (org-narrow-to-subtree)
       (other-window 1))))
 
-(defun interleave-go-to-next-page ()
-  "Go to the next page in PDF. Look up for available notes."
-  (interactive)
-  (doc-view-next-page)
-  (interleave-go-to-page-note (doc-view-current-page)))
+(if (featurep 'pdf-view) ; if `pdf-tools' is installed
+    (progn
+      (defun interleave-go-to-next-page ()
+        "Go to the next page in PDF. Look up for available notes."
+        (interactive)
+        (pdf-view-next-page-command 1)
+        (interleave-go-to-page-note (pdf-view-current-page)))
 
-(defun interleave-go-to-previous-page ()
-  "Go to the previous page in PDF. Look up for available notes."
-  (interactive)
-  (doc-view-previous-page)
-  (interleave-go-to-page-note (doc-view-current-page)))
+      (defun interleave-go-to-previous-page ()
+        "Go to the previous page in PDF. Look up for available notes."
+        (interactive)
+        (pdf-view-previous-page-command 1)
+        (interleave-go-to-page-note (pdf-view-current-page)))
 
-(defun interleave-scroll-up ()
-  "Scroll up the PDF. Look up for available notes."
-  (interactive)
-  (setq *interleave-page-marker* (doc-view-current-page))
-  (doc-view-scroll-up-or-next-page)
-  (unless (= *interleave-page-marker* (doc-view-current-page))
-    (interleave-go-to-page-note (doc-view-current-page))))
+      (defun interleave-scroll-up ()
+        "Scroll up the PDF. Look up for available notes."
+        (interactive)
+        (setq *interleave-page-marker* (pdf-view-current-page))
+        (pdf-view-scroll-up-or-next-page)
+        (unless (= *interleave-page-marker* (pdf-view-current-page))
+          (interleave-go-to-page-note (pdf-view-current-page))))
 
-(defun interleave-scroll-down ()
-  "Scroll down the PDF. Look up for available notes."
-  (interactive)
-  (setq *interleave-page-marker* (doc-view-current-page))
-  (doc-view-scroll-down-or-previous-page)
-  (unless (= *interleave-page-marker* (doc-view-current-page))
-    (interleave-go-to-page-note (doc-view-current-page))))
+      (defun interleave-scroll-down ()
+        "Scroll down the PDF. Look up for available notes."
+        (interactive)
+        (setq *interleave-page-marker* (pdf-view-current-page))
+        (pdf-view-scroll-down-or-previous-page)
+        (unless (= *interleave-page-marker* (pdf-view-current-page))
+          (interleave-go-to-page-note (pdf-view-current-page))))
 
-(defun interleave-add-note ()
-  "Add note for the current page. If there are already notes for this page,
+      (defun interleave-add-note ()
+        "Add note for the current page. If there are already notes for this page,
 jump to the notes buffer."
-  (interactive)
-  (let ((page (doc-view-current-page)))
-    (with-current-buffer *interleave--org-buf*
-      (save-excursion
-        (if (interleave-go-to-page-note page)
-            (other-window 1)
-          (interleave-create-new-note page))))))
+        (interactive)
+        (let ((page (pdf-view-current-page)))
+          (with-current-buffer *interleave--org-buf*
+            (save-excursion
+              (if (interleave-go-to-page-note page)
+                  (other-window 1)
+                (interleave-create-new-note page)))))))
+  (progn ; if `pdf-tools' is NOT installed
+    (defun interleave-go-to-next-page ()
+      "Go to the next page in PDF. Look up for available notes."
+      (interactive)
+      (doc-view-next-page)
+      (interleave-go-to-page-note (doc-view-current-page)))
 
-(when (featurep 'pdf-view) ; if `pdf-tools' is installed
+    (defun interleave-go-to-previous-page ()
+      "Go to the previous page in PDF. Look up for available notes."
+      (interactive)
+      (doc-view-previous-page)
+      (interleave-go-to-page-note (doc-view-current-page)))
 
-  (defun interleave-pdf-view-after-page ()
-    "Go to the page's notes after the page has been changend with `pdf-tools'."
-    (interleave-go-to-page-note (pdf-view-current-page)))
+    (defun interleave-scroll-up ()
+      "Scroll up the PDF. Look up for available notes."
+      (interactive)
+      (setq *interleave-page-marker* (doc-view-current-page))
+      (doc-view-scroll-up-or-next-page)
+      (unless (= *interleave-page-marker* (doc-view-current-page))
+        (interleave-go-to-page-note (doc-view-current-page))))
 
-  (add-hook 'pdf-view-change-page-hook 'interleave-pdf-view-after-page)
+    (defun interleave-scroll-down ()
+      "Scroll down the PDF. Look up for available notes."
+      (interactive)
+      (setq *interleave-page-marker* (doc-view-current-page))
+      (doc-view-scroll-down-or-previous-page)
+      (unless (= *interleave-page-marker* (doc-view-current-page))
+        (interleave-go-to-page-note (doc-view-current-page))))
 
-  (defun interleave-add-note-pdf-view ()
-    "Add note for the current page. If there are already notes for this page,
-jump to the notes buffer. Applies if `pdf-tools' are installed."
-    (interactive)
-    (let ((page (pdf-view-current-page)))
-      (with-current-buffer *interleave--org-buf*
-        (save-excursion
-          (if (interleave-go-to-page-note page)
-              (other-window 1)
-            (interleave-create-new-note page)))))))
+    (defun interleave-add-note ()
+      "Add note for the current page. If there are already notes for this page,
+jump to the notes buffer."
+      (interactive)
+      (let ((page (doc-view-current-page)))
+        (with-current-buffer *interleave--org-buf*
+          (save-excursion
+            (if (interleave-go-to-page-note page)
+                (other-window 1)
+              (interleave-create-new-note page))))))))
 
 (defun interleave-quit ()
   "Quit interleave mode."
@@ -192,22 +216,19 @@ Navigation is the same as in `doc-view-mode'."
     (setq *interleave--org-buf* (current-buffer))
     (interleave-open-file (or (and current-prefix-arg 'split-window-below)
                               'split-window-right))))
+
 ;;;###autoload
 (define-minor-mode interleave-docview-mode
   "Interleave view for doc-view"
   :lighter " Interleave-DocView"
   :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "q") 'interleave-quit)
-            (if (featurep 'pdf-view)
-                (progn
-                  (define-key map (kbd "i") 'interleave-add-note-pdf-view))
-              (progn
-                  (define-key map (kbd "n") 'interleave-go-to-next-page)
-                  (define-key map (kbd "p") 'interleave-go-to-previous-page)
-                  (define-key map (kbd "SPC") 'interleave-scroll-up)
-                  (define-key map (kbd "S-SPC") 'interleave-scroll-down)
-                  (define-key map (kbd "DEL") 'interleave-scroll-down)
-                  (define-key map (kbd "i") 'interleave-add-note)))
+            (define-key map (kbd "n")     #'interleave-go-to-next-page)
+            (define-key map (kbd "p")     #'interleave-go-to-previous-page)
+            (define-key map (kbd "SPC")   #'interleave-scroll-up)
+            (define-key map (kbd "S-SPC") #'interleave-scroll-down)
+            (define-key map (kbd "DEL")   #'interleave-scroll-down)
+            (define-key map (kbd "i")     #'interleave-add-note)
+            (define-key map (kbd "q")     #'interleave-quit)
             map))
 
 
