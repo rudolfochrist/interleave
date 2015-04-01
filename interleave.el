@@ -126,18 +126,21 @@ to PAGE. It narrows the subtree when found."
   (unless (= *interleave-page-marker* (doc-view-current-page))
     (interleave-go-to-page-note (doc-view-current-page))))
 
+(defun interleave--switch-to-other-window ()
+  (other-window 1)
+  (goto-char (point-max))
+  (redisplay))
+
 (defun interleave-add-note ()
   "Add note for the current page. If there are already notes for this page,
 jump to the notes buffer."
   (interactive)
   (let ((page (doc-view-current-page)))
-    (with-current-buffer *interleave--org-buf*
-      (save-excursion
-        (if (interleave-go-to-page-note page)
-            (other-window 1)
-          (interleave-create-new-note page))))))
+    (if (interleave-go-to-page-note page)
+        (interleave--switch-to-other-window)
+      (interleave-create-new-note page))))
 
-(when (featurep 'pdf-view) ; if `pdf-tools' is installed
+(when (featurep 'pdf-view)              ; if `pdf-tools' is installed
 
   (defun interleave-pdf-view-after-page ()
     "Go to the page's notes after the page has been changend with `pdf-tools'."
@@ -150,11 +153,9 @@ jump to the notes buffer."
 jump to the notes buffer. Applies if `pdf-tools' are installed."
     (interactive)
     (let ((page (pdf-view-current-page)))
-      (with-current-buffer *interleave--org-buf*
-        (save-excursion
-          (if (interleave-go-to-page-note page)
-              (other-window 1)
-            (interleave-create-new-note page)))))))
+      (if (interleave-go-to-page-note page)
+          (interleave--switch-to-other-window)
+        (interleave-create-new-note page)))))
 
 (defun interleave-quit ()
   "Quit interleave mode."
