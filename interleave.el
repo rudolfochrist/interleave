@@ -2,7 +2,6 @@
 
 ;; Author: Sebastian Christ <rudolfo.christ@gmail.com>
 ;; URL: https://github.com/rudolfochrist/interleave
-;; Package-Version: 20150402.206
 ;; Version: 0.2.2
 
 ;; This file is not part of GNU Emacs
@@ -21,25 +20,28 @@
 ;; see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;
-;; In the past, textbooks were sometimes published as /interleaved/ editions. That meant, each page
-;; was followed by a blank page and the ambitious student/scholar had the ability to take his notes directly
-;; in her copy of the textbook. Newton and Kant were prominent representatives of this technique.
 
-;; Nowadays textbooks (or lecture material) come in PDF format. Although almost every PDF Reader has the ability to add some notes to the PDF itself, it is not as powerful as it could be.
-;; This is what this minor mode tries to accomplish. It presents your PDF side by side to an [[http://orgmode.org][Org Mode]] buffer with you notes.
-;; Narrowing down to just those passages that are relevant to this particular page in the document viewer.
+;; In the past, textbooks were sometimes published as 'interleaved' editions.
+;; That meant, each page was followed by a blank page and the ambitious student/
+;; scholar had the ability to take their notes directly in their copy of the
+;; textbook. Newton and Kant were prominent representatives of this technique.
+
+;; Nowadays textbooks (or lecture material) come in PDF format. Although almost
+;; every PDF Reader has the ability to add some notes to the PDF itself, it is
+;; not as powerful as it could be.
+
+;; This is what this minor mode tries to accomplish. It presents your PDF side by
+;; side to an [[http://orgmode.org][Org Mode]] buffer with your notes, narrowing
+;; down to just those passages that are relevant to the particular page in the
+;; document viewer.
 
 ;;; Usage:
-;;
-;; Create a Org file thath will keep your notes. In the Org headers section add
+
+;; - Create a Org file that will keep your notes. In the Org headers section, add
 ;; #+INTERLEAVE_PDF: /the/path/to/your/pdf.pdf
-;;
-;; Then start 'interleave' with
-;; M-x interleave
-;;
-;; To insert a note for a page, type i.
-;; Navigation is the same as in `doc-view-mode'/`pdf-view-mode'.
+;; - Start `interleave' with `M-x interleave'.
+;; - To insert a note for a page, type `i'.
+;; - Navigation is the same as in `doc-view-mode'/`pdf-view-mode'."
 
 ;;; Code:
 
@@ -61,8 +63,7 @@
 (defvar *interleave--pdf-buffer* nil "PDF buffer associated with the notes buffer")
 
 (defvar interleave--window-configuration nil
-  "Variable to store the window configuration before interleave mode was
-enabled.")
+  "Variable to store the window configuration before interleave mode was enabled.")
 
 (if (featurep 'pdf-view) ; if `pdf-tools' is installed
     (progn
@@ -74,7 +75,7 @@ enabled.")
       (defconst interleave--pdf-scroll-up-or-next-page-fn       #'pdf-view-scroll-up-or-next-page)
       (defconst interleave--pdf-scroll-down-or-previous-page-fn #'pdf-view-scroll-down-or-previous-page))
   (progn
-    (defconst interleave--pdf-current-page-fn                 #'doc-view-current-page)
+    (defconst interleave--pdf-current-page-fn                 (lambda () (doc-view-current-page)))
     (defconst interleave--pdf-next-page-fn                    #'doc-view-next-page)
     (defconst interleave--pdf-previous-page-fn                #'doc-view-previous-page)
     (defconst interleave--pdf-goto-page-fn                    #'doc-view-goto-page)
@@ -86,7 +87,7 @@ enabled.")
    "Caches the current page while scrolling"))
 
 (defun interleave--find-pdf-path (buffer)
-  "Searches for the 'interleave_pdf' property in BUFFER and extracts it when found"
+  "Searches for the `interleave_pdf' property in BUFFER and extracts it when found."
   (with-current-buffer buffer
     (save-excursion
       (goto-char (point-min))
@@ -107,17 +108,20 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
           (funcall split-window)
           (find-file (expand-file-name (interleave--find-pdf-path buf)))
           (interleave-pdf-mode 1))
-      ('error (message "Please specify PDF file with #+INTERLEAVE_PDF document property.")
-              (interleave--quit)))))
+      ('error
+       (message "Please specify PDF file with #+INTERLEAVE_PDF document property.")
+       (interleave--quit)))))
 
 (defun interleave--go-to-page-note (page)
-  "Searches the notes buffer for an headline with the 'interleave_page_note' property set
-to PAGE. It narrows the subtree when found."
+  "Searches the notes buffer for an headline with the `interleave_page_note'
+property set to PAGE. It narrows the subtree when found."
   (with-current-buffer *interleave--org-buffer*
     (save-excursion
       (widen)
       (goto-char (point-min))
-      (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$" page) nil t)
+      (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$"
+                                       page)
+                               nil t)
         (org-narrow-to-subtree)
         (org-show-entry)
         t))))
@@ -252,24 +256,27 @@ next set of notes."
 (define-minor-mode interleave
   "Interleaving your text books since 2015.
 
-In the past, textbooks were sometimes published as /interleaved/ editions. That meant, each page
-was followed by a blank page and the ambitious student/scholar had the ability to take his notes directly
-in her copy of the textbook. Newton and Kant were prominent representatives of this technique.
+In the past, textbooks were sometimes published as 'interleaved' editions.
+That meant, each page was followed by a blank page and the ambitious student/
+scholar had the ability to take their notes directly in their copy of the
+textbook. Newton and Kant were prominent representatives of this technique.
 
-Nowadays textbooks (or lecture material) come in PDF format. Although almost every PDF Reader has the ability to add some notes to the PDF itself, it is not as powerful as it could be.
-This is what this minor mode tries to accomplish. It presents your PDF side by side to an [[http://orgmode.org][Org Mode]] buffer with you notes.
-Narrowing down to just those passages that are relevant to this particular page in the document viewer.
+Nowadays textbooks (or lecture material) come in PDF format. Although almost
+every PDF Reader has the ability to add some notes to the PDF itself, it is
+not as powerful as it could be.
+
+This is what this minor mode tries to accomplish. It presents your PDF side by
+side to an [[http://orgmode.org][Org Mode]] buffer with your notes, narrowing
+down to just those passages that are relevant to the particular page in the
+document viewer.
 
 Usage:
 
-Create a Org file thath will keep your notes. In the Org headers section add
+- Create a Org file that will keep your notes. In the Org headers section, add
 #+INTERLEAVE_PDF: /the/path/to/your/pdf.pdf
-
-Then start 'interleave' with
-M-x interleave
-
-To insert a note for a page, type 'i'.
-Navigation is the same as in `doc-view-mode'/`pdf-view-mode'."
+- Start `interleave' with `M-x interleave'.
+- To insert a note for a page, type `i'.
+- Navigation is the same as in `doc-view-mode'/`pdf-view-mode'."
   :lighter " ≡"
   :keymap  interleave-map
   (if interleave
