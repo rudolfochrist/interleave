@@ -213,14 +213,17 @@ previous set of notes."
   (interleave--switch-to-org-buffer)
   (let ((pdf-page))
     (save-excursion
-      (widen)
-      (org-backward-heading-same-level 1)
       (org-narrow-to-subtree)
       (goto-char (point-min))
-      (re-search-forward "^ *:interleave_page_note: *\\(.*\\)")
-      (setq pdf-page (string-to-number (match-string 1))))
-    (interleave--switch-to-pdf-buffer)
-    (funcall interleave--pdf-goto-page-fn pdf-page)))
+      (widen)
+      (when (re-search-backward "^ *:interleave_page_note: *\\(.*\\)" nil :noerror)
+        (setq pdf-page (string-to-number (match-string 1)))))
+    (if pdf-page
+        (progn
+          (interleave--go-to-page-note pdf-page)
+          (interleave--switch-to-pdf-buffer)
+          (funcall interleave--pdf-goto-page-fn pdf-page))
+      (org-narrow-to-subtree))))
 
 (defun interleave--sync-pdf-page-next ()
   "Synchronize the page in the pdf buffer to be the same as the page in the
@@ -229,22 +232,26 @@ next set of notes."
   (interleave--switch-to-org-buffer)
   (let ((pdf-page))
     (save-excursion
-      (widen)
-      (org-forward-heading-same-level 1)
       (org-narrow-to-subtree)
       (goto-char (point-min))
-      (re-search-forward "^ *:interleave_page_note: *\\(.*\\)")
-      (setq pdf-page (string-to-number (match-string 1))))
-    (interleave--switch-to-pdf-buffer)
-    (funcall interleave--pdf-goto-page-fn pdf-page)))
+      (re-search-forward "^ *:interleave_page_note:") ; current page
+      (widen)
+      (when (re-search-forward "^ *:interleave_page_note: *\\(.*\\)" nil :noerror) ; next page
+        (setq pdf-page (string-to-number (match-string 1)))))
+    (if pdf-page
+        (progn
+          (interleave--go-to-page-note pdf-page)
+          (interleave--switch-to-pdf-buffer)
+          (funcall interleave--pdf-goto-page-fn pdf-page))
+      (org-narrow-to-subtree))))
 
-(defun interleave--quit ()
-  "Quit interleave mode."
-  (interactive)
-  (with-current-buffer *interleave--org-buffer*
-    (widen)
-    (interleave 0))
-  (interleave--pdf-kill-proc-and-buffer))
+  (defun interleave--quit ()
+    "Quit interleave mode."
+    (interactive)
+    (with-current-buffer *interleave--org-buffer*
+      (widen)
+      (interleave 0))
+    (interleave--pdf-kill-proc-and-buffer))
 
 ;;; Interleave
 ;; Minor mode for the org file buffer containing notes
