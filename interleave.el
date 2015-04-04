@@ -312,13 +312,24 @@ of .pdf)."
       (find-file org-file-name)
       (interleave))))
 
-  (defun interleave--quit ()
-    "Quit interleave mode."
-    (interactive)
-    (with-current-buffer *interleave--org-buffer*
-      (widen)
-      (interleave 0))
-    (interleave--pdf-kill-proc-and-buffer))
+(defun interleave--quit ()
+  "Quit interleave mode."
+  (interactive)
+  (with-current-buffer *interleave--org-buffer*
+    (widen)
+    (goto-char (point-min))
+    (interleave--sort-notes 'asc)
+    (interleave 0))
+  (interleave--pdf-kill-proc-and-buffer))
+
+(defun interleave--sort-notes (sort-order)
+  "Sort notes by interleave_page_property.
+
+SORT-ORDER is either 'asc or 'desc."
+  (let ((sorting-type (if (eq sort-order 'asc)
+                          ?r
+                        ?R)))
+    (org-sort-entries nil sorting-type nil nil "interleave_page_note")))
 
 ;;; Interleave
 ;; Minor mode for the org file buffer containing notes
