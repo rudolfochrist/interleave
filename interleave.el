@@ -59,6 +59,21 @@
             (derived-mode-p 'pdf-view-mode))
     (kill-buffer (current-buffer))))
 
+(defcustom interleave--org-notes-dir-list '("~/org/interleave_notes"
+                                            ".")
+  "List of directories to look into when opening interleave notes org from a
+pdf file. The notes file is assumed to have the exact same base name as the pdf
+file (just that the file extension is .org instead of .pdf).
+
+If the notes org file is not found, it is created in the directory returned on
+doing `car' of this list (first element of the list).
+
+The notes file is searched in order from the first list element till the last;
+the search is aborted once the file is found.
+
+The list element \".\" means to look for the org file in the same directory
+as the pdf file.")
+
 (defvar *interleave--org-buffer* nil "Org notes buffer")
 (defvar *interleave--pdf-buffer* nil "PDF buffer associated with the notes buffer")
 
@@ -245,6 +260,56 @@ next set of notes."
           (funcall interleave--pdf-goto-page-fn pdf-page))
       (org-narrow-to-subtree))))
 
+;;;###autoload
+(defun interleave--open-notes-file-for-pdf ()
+  "Open the notes org file for the current pdf file if it exists.
+Else create it.
+
+It is assumed that the notes org file will have the exact same base name
+as the pdf file (just that the notes file will have a .org extension instead
+of .pdf)."
+  (interactive)
+  (when (or (derived-mode-p 'doc-view-mode)
+            (derived-mode-p 'pdf-view-mode))
+    (let* ((pdf-file-name (buffer-file-name))
+           (org-file-name-sans-directory (concat (file-name-base pdf-file-name)
+                                                 ".org"))
+           org-file-create-dir
+           (cnt 0)
+           try-org-file-name
+           (org-file-name (catch 'break
+                            (dolist (dir interleave--org-notes-dir-list)
+                              ;; Look for the org file in the same dir as pdf
+                              ;; if dir is "."
+                              (when (string= dir ".")
+                                (setq dir (file-name-directory pdf-file-name)))
+                              (when (= cnt 0)
+                                ;; In the event the org file is needed to be
+                                ;; created, it will be created in the directory
+                                ;; listed as the first element in
+                                ;; `interleave--org-notes-dir-list'
+                                (setq org-file-create-dir dir))
+                              (message "cnt %0d dir %0s dirc %0s"
+                                       cnt
+                                       dir
+                                       org-file-create-dir)
+                              (setq cnt (1+ cnt))
+                              (setq try-org-file-name (locate-file
+                                                       org-file-name-sans-directory
+                                                       (list dir)))
+                              (when try-org-file-name
+                                ;; return the first match
+                                (throw 'break try-org-file-name))))))
+      ;; Create the notes org file if it does not exist
+      (when (null org-file-name)
+        (setq org-file-name (expand-file-name org-file-name-sans-directory
+                                              org-file-create-dir))
+        (with-temp-file org-file-name
+          (insert "#+INTERLEAVE_PDF: " pdf-file-name)))
+      ;; Open the notes org file and enable `interleave'
+      (find-file org-file-name)
+      (interleave))))
+
   (defun interleave--quit ()
     "Quit interleave mode."
     (interactive)
@@ -328,6 +393,10 @@ Usage:
 (define-key interleave-pdf-mode-map (kbd "M-.")   #'interleave--sync-pdf-page-current)
 (define-key interleave-pdf-mode-map (kbd "M-p")   #'interleave--sync-pdf-page-previous)
 (define-key interleave-pdf-mode-map (kbd "M-n")   #'interleave--sync-pdf-page-next)
+
+(define-key doc-view-mode-map (kbd "i") #'interleave--open-notes-file-for-pdf)
+(when (featurep 'pdf-view)
+  (define-key pdf-view-mode-map (kbd "i") #'interleave--open-notes-file-for-pdf))
 
 
 (provide 'interleave)
