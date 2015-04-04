@@ -289,10 +289,6 @@ of .pdf)."
                                 ;; listed as the first element in
                                 ;; `interleave--org-notes-dir-list'
                                 (setq org-file-create-dir dir))
-                              (message "cnt %0d dir %0s dirc %0s"
-                                       cnt
-                                       dir
-                                       org-file-create-dir)
                               (setq cnt (1+ cnt))
                               (setq try-org-file-name (locate-file
                                                        org-file-name-sans-directory
