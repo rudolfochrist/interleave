@@ -71,8 +71,9 @@ doing `car' of this list (first element of the list).
 The notes file is searched in order from the first list element till the last;
 the search is aborted once the file is found.
 
-The list element \".\" means to look for the org file in the same directory
-as the pdf file.")
+If a list element is \".\" or begins with \"./\", that portion is replaced with
+the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
+\"./notes\" is interpreted as \"/pdf/file/dir/notes/\".")
 
 (defvar *interleave--org-buffer* nil "Org notes buffer")
 (defvar *interleave--pdf-buffer* nil "PDF buffer associated with the notes buffer")
@@ -279,10 +280,12 @@ of .pdf)."
            try-org-file-name
            (org-file-name (catch 'break
                             (dolist (dir interleave--org-notes-dir-list)
-                              ;; Look for the org file in the same dir as pdf
-                              ;; if dir is "."
-                              (when (string= dir ".")
-                                (setq dir (file-name-directory pdf-file-name)))
+                              ;; If dir is "." or begins with "./", replace
+                              ;; the "." or "./" with the pdf dir name
+                              (setq dir (replace-regexp-in-string
+                                         "^\\(\\.$\\|\\./\\).*"
+                                         (file-name-directory pdf-file-name)
+                                         dir nil nil 1))
                               (when (= cnt 0)
                                 ;; In the event the org file is needed to be
                                 ;; created, it will be created in the directory
@@ -298,6 +301,8 @@ of .pdf)."
                                 (throw 'break try-org-file-name))))))
       ;; Create the notes org file if it does not exist
       (when (null org-file-name)
+        (when (null (file-exists-p org-file-create-dir))
+          (make-directory org-file-create-dir))
         (setq org-file-name (expand-file-name org-file-name-sans-directory
                                               org-file-create-dir))
         (with-temp-file org-file-name
