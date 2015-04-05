@@ -74,7 +74,8 @@ the search is aborted once the file is found.
 If a list element is \".\" or begins with \"./\", that portion is replaced with
 the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 \"./notes\" is interpreted as \"/pdf/file/dir/notes/\"."
-  :group "interleave")
+  :type '(repeat directory)
+  :group 'interleave)
 
 (defvar *interleave--org-buffer* nil "Org notes buffer")
 (defvar *interleave--pdf-buffer* nil "PDF buffer associated with the notes buffer")
