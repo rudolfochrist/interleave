@@ -137,7 +137,7 @@ property set to PAGE. It narrows the subtree when found."
     (save-excursion
       (widen)
       (goto-char (point-min))
-      (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: *0*%s$"
+      (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$"
                                        page)
                                nil t)
         (org-narrow-to-subtree)
@@ -197,11 +197,7 @@ property set to PAGE. It narrows the subtree when found."
       (goto-char (point-max))
       (org-insert-heading-respect-content)
       (insert (format "Notes for page %d" page))
-      ;; Assume the page numbers to have at most 6 digits
-      ;; This is for the `org-sort-entries' function to work as expected
-      ;; because "2" is considered greater than "10" incorrectly but
-      ;; "02" is correctly considered lesser than "10".
-      (org-set-property "interleave_page_note" (format "%06d" page))
+      (org-set-property "interleave_page_note" (number-to-string page))
       (org-narrow-to-subtree)))
   (interleave--switch-to-org-buffer t))
 
@@ -223,7 +219,7 @@ the current narrowed down notes view."
     (save-excursion
       (org-narrow-to-subtree)
       (goto-char (point-min))
-      (re-search-forward "^ *:interleave_page_note: *0*\\([0-9]+\\)")
+      (re-search-forward "^ *:interleave_page_note: *\\(.*\\)")
       (setq pdf-page (string-to-number (match-string 1))))
     (interleave--switch-to-pdf-buffer)
     (funcall interleave--pdf-goto-page-fn pdf-page)))
@@ -238,7 +234,7 @@ previous set of notes."
       (org-narrow-to-subtree)
       (goto-char (point-min))
       (widen)
-      (when (re-search-backward "^ *:interleave_page_note: *0*\\([0-9]+\\)" nil :noerror)
+      (when (re-search-backward "^ *:interleave_page_note: *\\(.*\\)" nil :noerror)
         (setq pdf-page (string-to-number (match-string 1)))))
     (if pdf-page
         (progn
@@ -258,7 +254,7 @@ next set of notes."
       (goto-char (point-min))
       (re-search-forward "^ *:interleave_page_note:") ; current page
       (widen)
-      (when (re-search-forward "^ *:interleave_page_note: *0*\\([0-9]+\\)" nil :noerror) ; next page
+      (when (re-search-forward "^ *:interleave_page_note: *\\(.*\\)" nil :noerror) ; next page
         (setq pdf-page (string-to-number (match-string 1)))))
     (if pdf-page
         (progn
@@ -331,10 +327,15 @@ of .pdf)."
   "Sort notes by interleave_page_property.
 
 SORT-ORDER is either 'asc or 'desc."
-  (let ((sorting-type (if (eq sort-order 'asc)
-                          ?r
-                        ?R)))
-    (org-sort-entries nil sorting-type nil nil "interleave_page_note")))
+  (org-sort-entries nil ?f
+                    (lambda ()
+                        (or (string-to-number
+                             (org-entry-get nil
+                                            "interleave_page_note"))
+                            -1))
+                    (if (eq sort-order 'asc)
+                        #'<
+                      #'>)))
 
 ;;; Interleave
 ;; Minor mode for the org file buffer containing notes
