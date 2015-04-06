@@ -327,10 +327,15 @@ of .pdf)."
   "Sort notes by interleave_page_property.
 
 SORT-ORDER is either 'asc or 'desc."
-  (let ((sorting-type (if (eq sort-order 'asc)
-                          ?r
-                        ?R)))
-    (org-sort-entries nil sorting-type nil nil "interleave_page_note")))
+  (org-sort-entries nil ?f
+                    #'(lambda ()
+                        (or (string-to-number
+                             (org-entry-get nil
+                                            "interleave_page_note"))
+                            -1))
+                    (if (eq sort-order 'asc)
+                        #'<
+                      #'>)))
 
 ;;; Interleave
 ;; Minor mode for the org file buffer containing notes
