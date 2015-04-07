@@ -319,9 +319,15 @@ of .pdf)."
   (with-current-buffer *interleave--org-buffer*
     (widen)
     (goto-char (point-min))
-    (interleave--sort-notes 'asc)
+    (interleave--sort-notes interleave--sort-order)
     (interleave 0))
   (interleave--pdf-kill-proc-and-buffer))
+
+(defcustom interleave--sort-order 'asc
+  "Specifiy the notes' sort order in the notes buffer."
+  :type '(choice (const :tag "Ascending" asc)
+                 (const :tag "Descending" desc))
+  :group 'interleave)
 
 (defun interleave--sort-notes (sort-order)
   "Sort notes by interleave_page_property.
