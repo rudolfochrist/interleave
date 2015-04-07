@@ -324,9 +324,11 @@ of .pdf)."
   (interleave--pdf-kill-proc-and-buffer))
 
 (defcustom interleave--sort-order 'asc
-  "Specifiy the notes' sort order in the notes buffer."
-  :type '(choice (const :tag "Ascending" asc)
-                 (const :tag "Descending" desc))
+  "Specifiy the notes' sort order in the notes buffer.
+
+The possible values are 'asc for ascending and 'desc for descending."
+  :type '(choice (const  asc)
+                 (const  desc))
   :group 'interleave)
 
 (defun interleave--sort-notes (sort-order)
