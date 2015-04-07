@@ -303,10 +303,13 @@ of .pdf)."
                                 (throw 'break try-org-file-name))))))
       ;; Create the notes org file if it does not exist
       (when (null org-file-name)
-        (when (null (file-exists-p org-file-create-dir))
-          (make-directory org-file-create-dir))
-        (setq org-file-name (expand-file-name org-file-name-sans-directory
-                                              org-file-create-dir))
+        (setq org-file-name (if (null interleave--org-notes-dir-list)
+                                (read-file-name "Path: " "~/")
+                              (progn
+                                (when (null (file-exists-p org-file-create-dir))
+                                  (make-directory org-file-create-dir))
+                                (expand-file-name org-file-name-sans-directory
+                                                  org-file-create-dir))))
         (with-temp-file org-file-name
           (insert "#+INTERLEAVE_PDF: " pdf-file-name)))
       ;; Open the notes org file and enable `interleave'
