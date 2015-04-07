@@ -334,11 +334,11 @@ of .pdf)."
 
 SORT-ORDER is either 'asc or 'desc."
   (org-sort-entries nil ?f
-                    #'(lambda ()
-                        (or (string-to-number
-                             (org-entry-get nil
-                                            "interleave_page_note"))
-                            -1))
+                    (lambda ()
+                      (or (string-to-number
+                           (org-entry-get nil
+                                          "interleave_page_note"))
+                          -1))
                     (if (eq sort-order 'asc)
                         #'<
                       #'>)))
