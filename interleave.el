@@ -325,10 +325,15 @@ of .pdf)."
   (with-current-buffer *interleave--org-buffer*
     (widen)
     (goto-char (point-min))
-    (interleave--sort-notes interleave--sort-order)
-    (org-overview)
+    (when (interleave--headlines-available-p)
+      (interleave--sort-notes interleave--sort-order)
+      (org-overview))
     (interleave 0))
   (interleave--pdf-kill-proc-and-buffer))
+
+(defun interleave--headlines-available-p ()
+  (save-excursion
+    (re-search-forward "^\* .*" nil t)))
 
 (defcustom interleave--sort-order 'asc
   "Specifiy the notes' sort order in the notes buffer.
