@@ -124,11 +124,14 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
         (progn
           (delete-other-windows)
           (funcall split-window)
-          (find-file (expand-file-name (interleave--find-pdf-path buf)))
-          (interleave-pdf-mode 1))
+          (find-file (expand-file-name (interleave--find-pdf-path buf))))
       ('error
-       (message "Please specify PDF file with #+INTERLEAVE_PDF document property.")
-       (interleave--quit)))))
+       (let ((pdf-file-name
+              (read-file-name "No #+INTERLEAVE_PDF property found. Please specify path: " "~/")))
+         (find-file (expand-file-name pdf-file-name))
+         (with-current-buffer buf
+           (insert "#+INTERLEAVE_PDF: " pdf-file-name)))))
+    (interleave-pdf-mode 1)))
 
 (defun interleave--go-to-page-note (page)
   "Searches the notes buffer for an headline with the `interleave_page_note'
