@@ -323,6 +323,7 @@ of .pdf)."
     (widen)
     (goto-char (point-min))
     (interleave--sort-notes interleave--sort-order)
+    (org-overview)
     (interleave 0))
   (interleave--pdf-kill-proc-and-buffer))
 
