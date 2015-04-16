@@ -387,7 +387,15 @@ Usage:
 #+INTERLEAVE_PDF: /the/path/to/your/pdf.pdf
 - Start `interleave' with `M-x interleave'.
 - To insert a note for a page, type `i'.
-- Navigation is the same as in `doc-view-mode'/`pdf-view-mode'."
+- Navigation is the same as in `doc-view-mode'/`pdf-view-mode'.
+
+Keybindings (`doc-view-mode'/`pdf-view-mode'):
+
+\\{interleave-pdf-mode-map}
+
+Keybindings (org-mode buffer):
+
+\\{interleave-map}"
   :lighter " ≡"
   :keymap  interleave-map
   (if interleave
