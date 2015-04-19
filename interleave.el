@@ -83,6 +83,14 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 (defvar interleave--window-configuration nil
   "Variable to store the window configuration before interleave mode was enabled.")
 
+;;; supress "functions are not known to be defined" warnings
+(declare-function pdf-view-next-page "pdf-view.el")
+(declare-function pdf-view-previous-page "pdf-view.el")
+(declare-function pdf-view-goto-page "pdf-view.el")
+(declare-function pdf-view-scroll-up-or-next-page "pdf-view.el")
+(declare-function pdf-view-scroll-down-or-previous-page "pdf-view.el")
+(declare-function pdf-view-current-page "pdf-view.el")
+
 (if (featurep 'pdf-view) ; if `pdf-tools' is installed
     (progn
       ;; Function wrapper for the macro `pdf-view-current-page'
