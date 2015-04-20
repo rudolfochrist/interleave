@@ -412,7 +412,8 @@ Keybindings (org-mode buffer):
         (setq interleave--window-configuration (current-window-configuration))
         (setq *interleave--org-buffer* (current-buffer))
         (interleave--open-file (or (and current-prefix-arg #'split-window-below)
-                                   #'split-window-right)))
+                                   #'split-window-right))
+        (interleave--go-to-page-note 1))
     (progn
       (message "Interleave disabled")
       (set-window-configuration interleave--window-configuration))))
