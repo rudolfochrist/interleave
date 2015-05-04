@@ -8,7 +8,7 @@ In the past, textbooks were sometimes published as /interleaved/ editions. That 
 
 Nowadays textbooks (or lecture material) come in PDF format. Although almost every PDF Reader has the ability to add some notes to the PDF itself, it is not as powerful as it could be. This is what this [[https://www.gnu.org/software/emacs/][Emacs]] minor mode tries to accomplish. It presents your PDF side by side to an [[http://orgmode.org][Org Mode]] buffer with you notes. Narrowing down to just those passages that are relevant to this particular page in the document viewer.
 
-In a later step it should be possible to create truly /interleaved/ PDFs with you notes.
+In a later step it should be possible to create truly /interleaved/ PDFs of your notes.
 
 * Installation
 
