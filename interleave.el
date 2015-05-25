@@ -59,7 +59,7 @@
             (derived-mode-p 'pdf-view-mode))
     (kill-buffer (current-buffer))))
 
-(defcustom interleave--org-notes-dir-list '("~/org/interleave_notes"
+(defcustom interleave-org-notes-dir-list '("~/org/interleave_notes"
                                             ".")
   "List of directories to look into when opening interleave notes org from a
 pdf file. The notes file is assumed to have the exact same base name as the pdf
@@ -292,7 +292,7 @@ of .pdf)."
            (cnt 0)
            try-org-file-name
            (org-file-name (catch 'break
-                            (dolist (dir interleave--org-notes-dir-list)
+                            (dolist (dir interleave-org-notes-dir-list)
                               ;; If dir is "." or begins with "./", replace
                               ;; the "." or "./" with the pdf dir name
                               (setq dir (replace-regexp-in-string
@@ -303,7 +303,7 @@ of .pdf)."
                                 ;; In the event the org file is needed to be
                                 ;; created, it will be created in the directory
                                 ;; listed as the first element in
-                                ;; `interleave--org-notes-dir-list'
+                                ;; `interleave-org-notes-dir-list'
                                 (setq org-file-create-dir dir))
                               (setq cnt (1+ cnt))
                               (setq try-org-file-name (locate-file
@@ -314,7 +314,7 @@ of .pdf)."
                                 (throw 'break try-org-file-name))))))
       ;; Create the notes org file if it does not exist
       (when (null org-file-name)
-        (setq org-file-name (if (null interleave--org-notes-dir-list)
+        (setq org-file-name (if (null interleave-org-notes-dir-list)
                                 (read-file-name "Path: " "~/")
                               (progn
                                 (when (null (file-exists-p org-file-create-dir))
@@ -334,7 +334,7 @@ of .pdf)."
     (widen)
     (goto-char (point-min))
     (when (interleave--headlines-available-p)
-      (interleave--sort-notes interleave--sort-order)
+      (interleave--sort-notes interleave-sort-order)
       (org-overview))
     (interleave 0))
   (interleave--pdf-kill-proc-and-buffer))
@@ -343,7 +343,7 @@ of .pdf)."
   (save-excursion
     (re-search-forward "^\* .*" nil t)))
 
-(defcustom interleave--sort-order 'asc
+(defcustom interleave-sort-order 'asc
   "Specifiy the notes' sort order in the notes buffer.
 
 The possible values are 'asc for ascending and 'desc for descending."
