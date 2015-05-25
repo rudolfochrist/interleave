@@ -155,19 +155,19 @@ property set to PAGE. It narrows the subtree when found."
         (org-show-entry)
         t))))
 
-(defun interleave--go-to-next-page ()
+(defun interleave-go-to-next-page ()
   "Go to the next page in PDF. Look up for available notes."
   (interactive)
   (funcall interleave--pdf-next-page-fn)
   (interleave--go-to-page-note (funcall interleave--pdf-current-page-fn)))
 
-(defun interleave--go-to-previous-page ()
+(defun interleave-go-to-previous-page ()
   "Go to the previous page in PDF. Look up for available notes."
   (interactive)
   (funcall interleave--pdf-previous-page-fn)
   (interleave--go-to-page-note (funcall interleave--pdf-current-page-fn)))
 
-(defun interleave--scroll-up ()
+(defun interleave-scroll-up ()
   "Scroll up the PDF. Look up for available notes."
   (interactive)
   (setq *interleave--page-marker* (funcall interleave--pdf-current-page-fn))
@@ -175,7 +175,7 @@ property set to PAGE. It narrows the subtree when found."
   (unless (= *interleave--page-marker* (funcall interleave--pdf-current-page-fn))
     (interleave--go-to-page-note (funcall interleave--pdf-current-page-fn))))
 
-(defun interleave--scroll-down ()
+(defun interleave-scroll-down ()
   "Scroll down the PDF. Look up for available notes."
   (interactive)
   (setq *interleave--page-marker* (funcall interleave--pdf-current-page-fn))
@@ -212,7 +212,7 @@ property set to PAGE. It narrows the subtree when found."
       (org-narrow-to-subtree)))
   (interleave--switch-to-org-buffer t))
 
-(defun interleave--add-note ()
+(defun interleave-add-note ()
   "Add note for the current page. If there are already notes for this page,
 jump to the notes buffer."
   (interactive)
@@ -439,12 +439,12 @@ Keybindings (org-mode buffer):
 (define-key interleave-map (kbd "M-p") #'interleave--sync-pdf-page-previous)
 (define-key interleave-map (kbd "M-n") #'interleave--sync-pdf-page-next)
 
-(define-key interleave-pdf-mode-map (kbd "n")     #'interleave--go-to-next-page)
-(define-key interleave-pdf-mode-map (kbd "p")     #'interleave--go-to-previous-page)
-(define-key interleave-pdf-mode-map (kbd "SPC")   #'interleave--scroll-up)
-(define-key interleave-pdf-mode-map (kbd "S-SPC") #'interleave--scroll-down)
-(define-key interleave-pdf-mode-map (kbd "DEL")   #'interleave--scroll-down)
-(define-key interleave-pdf-mode-map (kbd "i")     #'interleave--add-note)
+(define-key interleave-pdf-mode-map (kbd "n")     #'interleave-go-to-next-page)
+(define-key interleave-pdf-mode-map (kbd "p")     #'interleave-go-to-previous-page)
+(define-key interleave-pdf-mode-map (kbd "SPC")   #'interleave-scroll-up)
+(define-key interleave-pdf-mode-map (kbd "S-SPC") #'interleave-scroll-down)
+(define-key interleave-pdf-mode-map (kbd "DEL")   #'interleave-scroll-down)
+(define-key interleave-pdf-mode-map (kbd "i")     #'interleave-add-note)
 (define-key interleave-pdf-mode-map (kbd "q")     #'interleave--quit)
 (define-key interleave-pdf-mode-map (kbd "M-.")   #'interleave--sync-pdf-page-current)
 (define-key interleave-pdf-mode-map (kbd "M-p")   #'interleave--sync-pdf-page-previous)
