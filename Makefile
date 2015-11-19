@@ -1,5 +1,5 @@
 
-EMACS ?= emacs
+emacs ?= emacs
 EMACSW ?= /usr/local/Cellar/emacs/24.5/Emacs.app/Contents/MacOS/Emacs
 CASK ?= cask
 
