@@ -112,6 +112,10 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
  (defvar *interleave--page-marker* 0
    "Caches the current page while scrolling"))
 
+(make-variable-buffer-local
+ (defvar *interleave--multi-pdf-notes-file* nil
+   "Indicates if the current Org notes file is a multi-pdf notes file."))
+
 (defun interleave--find-pdf-path (buffer)
   "Searches for the `interleave_pdf' property in BUFFER and extracts it when found."
   (with-current-buffer buffer
@@ -120,6 +124,16 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
       (re-search-forward "^#\\+interleave_pdf: \\(.*\\)")
       (when (match-string 0)
         (match-string 1)))))
+
+(defun interleave--headline-pdf-path (buffer)
+  (with-current-buffer buffer
+    (save-excursion
+      (let ((headline (org-element-at-point)))
+        (when (and (equal (org-element-type headline) 'headline)
+                   (equal (org-element-property :level headline) 1)
+                   (org-entry-get nil "interleave_pdf"))
+          (setq *interleave--multi-pdf-notes-file* t)
+          (org-entry-get nil "interleave_pdf"))))))
 
 (defun interleave--open-file (split-window)
   "Opens the interleave pdf file in `doc-view-mode'/`pdf-view-mode'  besides the
@@ -132,7 +146,8 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
         (progn
           (delete-other-windows)
           (funcall split-window)
-          (find-file (expand-file-name (interleave--find-pdf-path buf))))
+          (find-file (expand-file-name (or (interleave--headline-pdf-path buf)
+                                           (interleave--find-pdf-path buf)))))
       ('error
        (let ((pdf-file-name
               (read-file-name "No #+INTERLEAVE_PDF property found. Please specify path: " "~/")))
