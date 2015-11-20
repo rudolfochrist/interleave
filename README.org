@@ -40,11 +40,13 @@ Then you can start *interleave* by typing
 M-x interleave
 #+END_SRC
 
-This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual with @@html:<kbd>@@n@@html:</kbd>@@ and ~p~. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
+This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual
+with @@html:<kbd>@@n@@html:</kbd>@@ and @@html:<kbd>@@p@@html:</kbd>@@. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
 
-If you want to add some notes to the current page you can type ~i~. This will create a new headline for your notes. If some notes are already present, ~i~ will switch over to the other buffer.
+If you want to add some notes to the current page you can type @@html:<kbd>@@i@@html:</kbd>@@.
+This will create a new headline for your notes. If some notes are already present, @@html:<kbd>@@i@@html:</kbd>@@ will switch over to the other buffer.
 
-Typing ~q~ in the /DocView/ will quit *interleave*.
+Typing @@html:<kbd>@@q@@html:</kbd>@@ in the /DocView/ will quit *interleave*.
 
 * Footnotes
 
