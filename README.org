@@ -40,11 +40,49 @@ Then you can start *interleave* by typing
 M-x interleave
 #+END_SRC
 
-This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual with ~n~ and ~p~. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
+This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual
+with @@html:<kbd>@@n@@html:</kbd>@@ and @@html:<kbd>@@p@@html:</kbd>@@. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
 
-If you want to add some notes to the current page you can type ~i~. This will create a new headline for your notes. If some notes are already present, ~i~ will switch over to the other buffer.
+If you want to add some notes to the current page you can type @@html:<kbd>@@i@@html:</kbd>@@.
+This will create a new headline for your notes. If some notes are already present, @@html:<kbd>@@i@@html:</kbd>@@ will switch over to the other buffer.
 
-Typing ~q~ in the /DocView/ will quit *interleave*.
+Typing @@html:<kbd>@@q@@html:</kbd>@@ in the /DocView/ will quit *interleave*.
+
+** Multi-PDF Notes
+
+Normally the notes/PDF relation is bidirectional. This means for every PDF there is one notes file. But it is
+also possible to keep a single notes file for multiple PDFs.
+
+To keep a multi-PDF notes file create a headline for each PDF and set the =INTERLEAVE_PDF= property on it.
+
+: * Notes for CS103
+:   :PROPERTIES:
+:   :INTERLEAVE_PDF: cs103.pdf
+:   :END:
+
+To use =interleave= on this headline, simply place your point onto the headline an type
+
+: M-x interleave RET
+
+to start =interleave= for this subtree.
+
+*Notice that you have to decide. It is not possible to keep multi-PDF and normal notes in the same file.*
+
+* Key-bindings
+
+| Key                                | Description                                 | Availability       |
+|------------------------------------+---------------------------------------------+--------------------|
+| @@html:<kbd>@@n@@html:</kbd>@@     | Go to next page                             | PDF Buffer         |
+| @@html:<kbd>@@p@@html:</kbd>@@     | Go to previous page                         | PDF Buffer         |
+| @@html:<kbd>@@SPC@@html:</kbd>@@   | Scroll up                                   | PDF Buffer         |
+| @@html:<kbd>@@S-SPC@@html:</kbd>@@ | Scroll down                                 | PDF Buffer         |
+| @@html:<kbd>@@DEL@@html:</kbd>@@   | Scroll down                                 | PDF Buffer         |
+| @@html:<kbd>@@i@@html:</kbd>@@     | Insert new notes/go to notes                | PDF Buffer         |
+| @@html:<kbd>@@q@@html:</kbd>@@     | Quit =interleave=                           | PDF Buffer         |
+| @@html:<kbd>@@M-.@@html:</kbd>@@   | Go to page of currently visible notes       | PDF and Org Buffer |
+| @@html:<kbd>@@M-p@@html:</kbd>@@   | Go to the page of the previous set of notes | PDF and Org Buffer |
+| @@html:<kbd>@@M-n@@html:</kbd>@@   | Go to the page of the next set of notes     | PDF and Org Buffer |
+
 
 * Footnotes
 
