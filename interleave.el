@@ -156,13 +156,31 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
            (insert "#+INTERLEAVE_PDF: " pdf-file-name)))))
     (interleave-pdf-mode 1)))
 
+(defun interleave--goto-parent-headline ()
+  "Search the tree for the outermost parent headline."
+  (let ((headline (org-element-at-point)))
+    (unless (equal (org-element-type headline) 'headline)
+      (outline-up-heading 1)
+      (setq headline (org-element-at-point)))
+    (ignore-errors
+      (outline-up-heading (1- (org-element-property :level headline))))))
+
+(defun interleave--goto-search-position ()
+  "Move point to the search start position.
+
+For multi-pdf notes this is the outermost parent headline. For everything else
+this is the beginning of the buffer."
+  (if *interleave--multi-pdf-notes-file*
+      (interleave--goto-parent-headline)
+    (goto-char (point-min))))
+
 (defun interleave--go-to-page-note (page)
   "Searches the notes buffer for an headline with the `interleave_page_note'
 property set to PAGE. It narrows the subtree when found."
   (with-current-buffer *interleave--org-buffer*
     (save-excursion
       (widen)
-      (goto-char (point-min))
+      (interleave--goto-search-position)
       (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$"
                                        page)
                                nil t)
@@ -215,12 +233,22 @@ property set to PAGE. It narrows the subtree when found."
       (switch-to-buffer-other-window *interleave--pdf-buffer*)
     (switch-to-buffer *interleave--pdf-buffer*)))
 
+(defun interleave--goto-insert-position ()
+  "Move the point to the right insert postion.
+
+For multi-pdf notes this is the end of the subtree. For everything else
+this is the end of the buffer"
+  (if (not *interleave--multi-pdf-notes-file*)
+      (goto-char (point-max))
+    (interleave--goto-parent-headline)
+    (org-end-of-subtree)))
+
 (defun interleave--create-new-note (page)
   "Creates a new headline for the page PAGE."
   (with-current-buffer *interleave--org-buffer*
     (save-excursion
       (widen)
-      (goto-char (point-max))
+      (interleave--goto-insert-position)
       (org-insert-heading-respect-content)
       (insert (format "Notes for page %d" page))
       (org-set-property "interleave_page_note" (number-to-string page))
@@ -347,7 +375,7 @@ of .pdf)."
   (interactive)
   (with-current-buffer *interleave--org-buffer*
     (widen)
-    (goto-char (point-min))
+    (interleave--goto-search-position)
     (when (interleave--headlines-available-p)
       (interleave--sort-notes interleave-sort-order)
       (org-overview))
