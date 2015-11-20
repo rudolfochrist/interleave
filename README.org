@@ -66,7 +66,7 @@ To use =interleave= on this headline, simply place your point onto the headline 
 
 to start =interleave= for this subtree.
 
-*Notice that you have to decide. It is not possible to keep a multi-PDF and normal notes in the same file.*
+*Notice that you have to decide. It is not possible to keep multi-PDF and normal notes in the same file.*
 
 * Key-bindings
 
