@@ -243,13 +243,20 @@ this is the end of the buffer"
     (interleave--goto-parent-headline)
     (org-end-of-subtree)))
 
+(defun interleave--insert-heading-respect-content ()
+  (org-insert-heading-respect-content)
+  (let ((new-heading (org-element-at-point)))
+    (when (and *interleave--multi-pdf-notes-file*
+               (< (org-element-property :level new-heading) 2))
+      (org-demote))))
+
 (defun interleave--create-new-note (page)
   "Creates a new headline for the page PAGE."
   (with-current-buffer *interleave--org-buffer*
     (save-excursion
       (widen)
       (interleave--goto-insert-position)
-      (org-insert-heading-respect-content)
+      (interleave--insert-heading-respect-content)
       (insert (format "Notes for page %d" page))
       (org-set-property "interleave_page_note" (number-to-string page))
       (org-narrow-to-subtree)))
