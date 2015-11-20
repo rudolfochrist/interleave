@@ -53,7 +53,7 @@ Typing @@html:<kbd>@@q@@html:</kbd>@@ in the /DocView/ will quit *interleave*.
 Normally the notes/PDF relation is bidirectional. This means for every PDF there is one notes file. But it is
 also possible to keep a single notes file for multiple PDFs.
 
-To keep a multi-PDF notes file add a new headline for this PDF and set the =INTERLEAVE_PDF= property on it.
+To keep a multi-PDF notes file create a headline for each PDF and set the =INTERLEAVE_PDF= property on it.
 
 : * Notes for CS103
 :   :PROPERTIES:
