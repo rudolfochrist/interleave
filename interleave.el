@@ -181,6 +181,9 @@ property set to PAGE. It narrows the subtree when found."
     (save-excursion
       (widen)
       (interleave--goto-search-position)
+      (when *interleave--multi-pdf-notes-file*
+        ;; only search the current subtree for notes. See. Issue #16
+        (org-narrow-to-subtree))
       (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$"
                                        page)
                                nil t)
