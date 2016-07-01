@@ -281,6 +281,8 @@ the current narrowed down notes view."
   (interleave--switch-to-org-buffer)
   (let ((pdf-page))
     (save-excursion
+      (when *interleave--multi-pdf-notes-file*
+        (interleave--goto-search-position))
       (org-narrow-to-subtree)
       (goto-char (point-min))
       (re-search-forward "^ *:interleave_page_note: *\\(.*\\)")
@@ -295,9 +297,14 @@ previous set of notes."
   (interleave--switch-to-org-buffer)
   (let ((pdf-page))
     (save-excursion
+      (when *interleave--multi-pdf-notes-file*
+        (interleave--goto-search-position))
       (org-narrow-to-subtree)
       (goto-char (point-min))
       (widen)
+      (when *interleave--multi-pdf-notes-file*
+        (save-excursion (interleave--goto-search-position)
+                        (org-narrow-to-subtree)))
       (when (re-search-backward "^ *:interleave_page_note: *\\(.*\\)" nil :noerror)
         (setq pdf-page (string-to-number (match-string 1)))))
     (if pdf-page
@@ -314,10 +321,15 @@ next set of notes."
   (interleave--switch-to-org-buffer)
   (let ((pdf-page))
     (save-excursion
+      (when *interleave--multi-pdf-notes-file*
+        (interleave--goto-search-position))
       (org-narrow-to-subtree)
       (goto-char (point-min))
       (re-search-forward "^ *:interleave_page_note:") ; current page
       (widen)
+      (when *interleave--multi-pdf-notes-file*
+        (save-excursion (interleave--goto-search-position)
+                        (org-narrow-to-subtree)))
       (when (re-search-forward "^ *:interleave_page_note: *\\(.*\\)" nil :noerror) ; next page
         (setq pdf-page (string-to-number (match-string 1)))))
     (if pdf-page
