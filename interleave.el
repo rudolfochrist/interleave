@@ -89,7 +89,6 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 (declare-function pdf-view-goto-page "pdf-view.el")
 (declare-function pdf-view-scroll-up-or-next-page "pdf-view.el")
 (declare-function pdf-view-scroll-down-or-previous-page "pdf-view.el")
-(declare-function pdf-view-current-page "pdf-view.el")
 
 (if (featurep 'pdf-view) ; if `pdf-tools' is installed
     (progn
@@ -228,7 +227,7 @@ property set to PAGE. It narrows the subtree when found."
     (goto-char (point-max))
     (redisplay)
     ;; Insert a new line if not already on a new line
-    (when (not (looking-back "^ *"))
+    (when (not (looking-back "^ *" (line-beginning-position)))
       (org-return))))
 
 (defun interleave--switch-to-pdf-buffer ()
