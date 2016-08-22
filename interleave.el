@@ -277,7 +277,7 @@ jump to the notes buffer."
 the current narrowed down notes view."
   (interactive)
   (interleave--switch-to-org-buffer)
-  (let ((pdf-page))
+  (let (pdf-page)
     (save-excursion
       (when *interleave--multi-pdf-notes-file*
         (interleave--goto-search-position))
@@ -285,15 +285,17 @@ the current narrowed down notes view."
       (goto-char (point-min))
       (re-search-forward "^ *:interleave_page_note: *\\(.*\\)")
       (setq pdf-page (string-to-number (match-string 1))))
-    (interleave--switch-to-pdf-buffer)
-    (funcall interleave--pdf-goto-page-fn pdf-page)))
+    (when (and (integerp pdf-page)
+               (> pdf-page 0)) ; The page number needs to be a positive integer
+      (interleave--switch-to-pdf-buffer)
+      (funcall interleave--pdf-goto-page-fn pdf-page))))
 
 (defun interleave--sync-pdf-page-previous ()
   "Synchronize the page in the pdf buffer to be the same as the page in the
 previous set of notes."
   (interactive)
   (interleave--switch-to-org-buffer)
-  (let ((pdf-page))
+  (let (pdf-page)
     (save-excursion
       (when *interleave--multi-pdf-notes-file*
         (interleave--goto-search-position))
@@ -305,7 +307,8 @@ previous set of notes."
                         (org-narrow-to-subtree)))
       (when (re-search-backward "^ *:interleave_page_note: *\\(.*\\)" nil :noerror)
         (setq pdf-page (string-to-number (match-string 1)))))
-    (if pdf-page
+    (if (and (integerp pdf-page)
+             (> pdf-page 0)) ; The page number needs to be a positive integer
         (progn
           (interleave--go-to-page-note pdf-page)
           (interleave--switch-to-pdf-buffer)
@@ -317,7 +320,7 @@ previous set of notes."
 next set of notes."
   (interactive)
   (interleave--switch-to-org-buffer)
-  (let ((pdf-page))
+  (let (pdf-page)
     (save-excursion
       (when *interleave--multi-pdf-notes-file*
         (interleave--goto-search-position))
@@ -330,7 +333,8 @@ next set of notes."
                         (org-narrow-to-subtree)))
       (when (re-search-forward "^ *:interleave_page_note: *\\(.*\\)" nil :noerror) ; next page
         (setq pdf-page (string-to-number (match-string 1)))))
-    (if pdf-page
+    (if (and (integerp pdf-page)
+             (> pdf-page 0)) ; The page number needs to be a positive integer
         (progn
           (interleave--go-to-page-note pdf-page)
           (interleave--switch-to-pdf-buffer)
