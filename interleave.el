@@ -90,22 +90,28 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 (declare-function pdf-view-scroll-up-or-next-page "pdf-view.el")
 (declare-function pdf-view-scroll-down-or-previous-page "pdf-view.el")
 
-(if (featurep 'pdf-view) ; if `pdf-tools' is installed
-    (progn
-      ;; Function wrapper for the macro `pdf-view-current-page'
-      (defconst interleave--pdf-current-page-fn                 (lambda () (pdf-view-current-page)))
-      (defconst interleave--pdf-next-page-fn                    #'pdf-view-next-page)
-      (defconst interleave--pdf-previous-page-fn                #'pdf-view-previous-page)
-      (defconst interleave--pdf-goto-page-fn                    #'pdf-view-goto-page)
-      (defconst interleave--pdf-scroll-up-or-next-page-fn       #'pdf-view-scroll-up-or-next-page)
-      (defconst interleave--pdf-scroll-down-or-previous-page-fn #'pdf-view-scroll-down-or-previous-page))
-  (progn
-    (defconst interleave--pdf-current-page-fn                 (lambda () (doc-view-current-page)))
-    (defconst interleave--pdf-next-page-fn                    #'doc-view-next-page)
-    (defconst interleave--pdf-previous-page-fn                #'doc-view-previous-page)
-    (defconst interleave--pdf-goto-page-fn                    #'doc-view-goto-page)
-    (defconst interleave--pdf-scroll-up-or-next-page-fn       #'doc-view-scroll-up-or-next-page)
-    (defconst interleave--pdf-scroll-down-or-previous-page-fn #'doc-view-scroll-down-or-previous-page)))
+(defvar interleave--pdf-current-page-fn (lambda () (doc-view-current-page))
+  "Function to call to display the current PDF page.")
+(defvar interleave--pdf-next-page-fn #'doc-view-next-page
+  "Function to call to display the next PDF page.")
+(defvar interleave--pdf-previous-page-fn #'doc-view-previous-page
+  "Function to call to display the previous PDF page.")
+(defvar interleave--pdf-goto-page-fn #'doc-view-goto-page
+  "Function to call to jump to a given PDF page.")
+(defvar interleave--pdf-scroll-up-or-next-page-fn #'doc-view-scroll-up-or-next-page
+  "Function to call for line/page scrolling in upward direction." )
+(defvar interleave--pdf-scroll-down-or-previous-page-fn #'doc-view-scroll-down-or-previous-page
+  "Function to call for line/page scrolling in downward direction.")
+
+(eval-after-load 'pdf-view ; if/when `pdf-tools' is loaded
+  '(progn
+     ;; Function wrapper for the macro `pdf-view-current-page'
+     (setq interleave--pdf-current-page-fn (lambda () (pdf-view-current-page)))
+     (setq interleave--pdf-next-page-fn #'pdf-view-next-page)
+     (setq interleave--pdf-previous-page-fn #'pdf-view-previous-page)
+     (setq interleave--pdf-goto-page-fn #'pdf-view-goto-page)
+     (setq interleave--pdf-scroll-up-or-next-page-fn #'pdf-view-scroll-up-or-next-page)
+     (setq interleave--pdf-scroll-down-or-previous-page-fn #'pdf-view-scroll-down-or-previous-page)))
 
 (make-variable-buffer-local
  (defvar *interleave--page-marker* 0
@@ -118,11 +124,12 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 (defun interleave--find-pdf-path (buffer)
   "Searches for the `interleave_pdf' property in BUFFER and extracts it when found."
   (with-current-buffer buffer
-    (save-excursion
-      (goto-char (point-min))
-      (re-search-forward "^#\\+interleave_pdf: \\(.*\\)")
-      (when (match-string 0)
-        (match-string 1)))))
+    (save-restriction
+      (widen)
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "^#\\+interleave_pdf: \\(.*\\)" nil :noerror)
+          (match-string 1))))))
 
 (defun interleave--headline-pdf-path (buffer)
   (with-current-buffer buffer
