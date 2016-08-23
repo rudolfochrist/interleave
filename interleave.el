@@ -118,11 +118,12 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 (defun interleave--find-pdf-path (buffer)
   "Searches for the `interleave_pdf' property in BUFFER and extracts it when found."
   (with-current-buffer buffer
-    (save-excursion
-      (goto-char (point-min))
-      (re-search-forward "^#\\+interleave_pdf: \\(.*\\)")
-      (when (match-string 0)
-        (match-string 1)))))
+    (save-restriction
+      (widen)
+      (save-excursion
+        (goto-char (point-min))
+        (when (re-search-forward "^#\\+interleave_pdf: \\(.*\\)" nil :noerror)
+          (match-string 1))))))
 
 (defun interleave--headline-pdf-path (buffer)
   (with-current-buffer buffer
