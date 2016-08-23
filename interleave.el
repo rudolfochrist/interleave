@@ -83,29 +83,28 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 (defvar interleave--window-configuration nil
   "Variable to store the window configuration before interleave mode was enabled.")
 
-;;; supress "functions are not known to be defined" warnings
-(declare-function pdf-view-next-page "pdf-view.el")
-(declare-function pdf-view-previous-page "pdf-view.el")
-(declare-function pdf-view-goto-page "pdf-view.el")
-(declare-function pdf-view-scroll-up-or-next-page "pdf-view.el")
-(declare-function pdf-view-scroll-down-or-previous-page "pdf-view.el")
+(defvar interleave--pdf-current-page-fn (lambda () (doc-view-current-page))
+  "Function to call to display the current PDF page.")
+(defvar interleave--pdf-next-page-fn #'doc-view-next-page
+  "Function to call to display the next PDF page.")
+(defvar interleave--pdf-previous-page-fn #'doc-view-previous-page
+  "Function to call to display the previous PDF page.")
+(defvar interleave--pdf-goto-page-fn #'doc-view-goto-page
+  "Function to call to jump to a given PDF page.")
+(defvar interleave--pdf-scroll-up-or-next-page-fn #'doc-view-scroll-up-or-next-page
+  "Function to call for line/page scrolling in upward direction." )
+(defvar interleave--pdf-scroll-down-or-previous-page-fn #'doc-view-scroll-down-or-previous-page
+  "Function to call for line/page scrolling in downward direction.")
 
-(if (featurep 'pdf-view) ; if `pdf-tools' is installed
-    (progn
-      ;; Function wrapper for the macro `pdf-view-current-page'
-      (defconst interleave--pdf-current-page-fn                 (lambda () (pdf-view-current-page)))
-      (defconst interleave--pdf-next-page-fn                    #'pdf-view-next-page)
-      (defconst interleave--pdf-previous-page-fn                #'pdf-view-previous-page)
-      (defconst interleave--pdf-goto-page-fn                    #'pdf-view-goto-page)
-      (defconst interleave--pdf-scroll-up-or-next-page-fn       #'pdf-view-scroll-up-or-next-page)
-      (defconst interleave--pdf-scroll-down-or-previous-page-fn #'pdf-view-scroll-down-or-previous-page))
-  (progn
-    (defconst interleave--pdf-current-page-fn                 (lambda () (doc-view-current-page)))
-    (defconst interleave--pdf-next-page-fn                    #'doc-view-next-page)
-    (defconst interleave--pdf-previous-page-fn                #'doc-view-previous-page)
-    (defconst interleave--pdf-goto-page-fn                    #'doc-view-goto-page)
-    (defconst interleave--pdf-scroll-up-or-next-page-fn       #'doc-view-scroll-up-or-next-page)
-    (defconst interleave--pdf-scroll-down-or-previous-page-fn #'doc-view-scroll-down-or-previous-page)))
+(eval-after-load 'pdf-view ; if/when `pdf-tools' is loaded
+  '(progn
+     ;; Function wrapper for the macro `pdf-view-current-page'
+     (setq interleave--pdf-current-page-fn (lambda () (pdf-view-current-page)))
+     (setq interleave--pdf-next-page-fn #'pdf-view-next-page)
+     (setq interleave--pdf-previous-page-fn #'pdf-view-previous-page)
+     (setq interleave--pdf-goto-page-fn #'pdf-view-goto-page)
+     (setq interleave--pdf-scroll-up-or-next-page-fn #'pdf-view-scroll-up-or-next-page)
+     (setq interleave--pdf-scroll-down-or-previous-page-fn #'pdf-view-scroll-down-or-previous-page)))
 
 (make-variable-buffer-local
  (defvar *interleave--page-marker* 0
