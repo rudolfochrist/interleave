@@ -59,8 +59,7 @@
             (derived-mode-p 'pdf-view-mode))
     (kill-buffer (current-buffer))))
 
-(defcustom interleave-org-notes-dir-list '("~/org/interleave_notes"
-                                            ".")
+(defcustom interleave-org-notes-dir-list '("~/org/interleave_notes" ".")
   "List of directories to look into when opening interleave notes org from a
 pdf file. The notes file is assumed to have the exact same base name as the pdf
 file (just that the file extension is .org instead of .pdf).
@@ -77,8 +76,11 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
   :type '(repeat directory)
   :group 'interleave)
 
-(defvar *interleave--org-buffer* nil "Org notes buffer")
-(defvar *interleave--pdf-buffer* nil "PDF buffer associated with the notes buffer")
+(defvar interleave-org-buffer nil
+  "Org notes buffer name.")
+
+(defvar interleave-pdf-buffer nil
+  "Name of PDF buffer associated with `interleave-org-buffer'.")
 
 (defvar interleave--window-configuration nil
   "Variable to store the window configuration before interleave mode was enabled.")
@@ -176,7 +178,7 @@ this is the beginning of the buffer."
 (defun interleave--go-to-page-note (page)
   "Searches the notes buffer for an headline with the `interleave_page_note'
 property set to PAGE. It narrows the subtree when found."
-  (with-current-buffer *interleave--org-buffer*
+  (with-current-buffer interleave-org-buffer
     (save-excursion
       (widen)
       (interleave--goto-search-position)
@@ -221,8 +223,8 @@ property set to PAGE. It narrows the subtree when found."
 (defun interleave--switch-to-org-buffer (&optional insert-newline-maybe)
   (if (or (derived-mode-p 'doc-view-mode)
           (derived-mode-p 'pdf-view-mode))
-      (switch-to-buffer-other-window *interleave--org-buffer*)
-    (switch-to-buffer *interleave--org-buffer*))
+      (switch-to-buffer-other-window interleave-org-buffer)
+    (switch-to-buffer interleave-org-buffer))
   (when insert-newline-maybe
     (goto-char (point-max))
     (redisplay)
@@ -231,9 +233,10 @@ property set to PAGE. It narrows the subtree when found."
       (org-return))))
 
 (defun interleave--switch-to-pdf-buffer ()
+  "Switch to the pdf buffer."
   (if (derived-mode-p 'org-mode)
-      (switch-to-buffer-other-window *interleave--pdf-buffer*)
-    (switch-to-buffer *interleave--pdf-buffer*)))
+      (switch-to-buffer-other-window interleave-pdf-buffer)
+    (switch-to-buffer interleave-pdf-buffer)))
 
 (defun interleave--goto-insert-position ()
   "Move the point to the right insert postion.
@@ -254,7 +257,7 @@ this is the end of the buffer"
 
 (defun interleave--create-new-note (page)
   "Creates a new headline for the page PAGE."
-  (with-current-buffer *interleave--org-buffer*
+  (with-current-buffer interleave-org-buffer
     (save-excursion
       (widen)
       (interleave--goto-insert-position)
@@ -398,7 +401,7 @@ of .pdf)."
 (defun interleave--quit ()
   "Quit interleave mode."
   (interactive)
-  (with-current-buffer *interleave--org-buffer*
+  (with-current-buffer interleave-org-buffer
     (widen)
     (interleave--goto-search-position)
     (when (interleave--headlines-available-p)
@@ -478,11 +481,15 @@ Keybindings (org-mode buffer):
       (progn
         (message "Interleave enabled")
         (setq interleave--window-configuration (current-window-configuration))
-        (setq *interleave--org-buffer* (current-buffer))
+        (setq interleave-org-buffer (buffer-name))
         (interleave--open-file (or (and current-prefix-arg #'split-window-below)
                                    #'split-window-right))
         (interleave--go-to-page-note 1))
     (progn
+      ;; Disable the corresponding minor mode in the PDF file too.
+      (when (get-buffer interleave-pdf-buffer)
+        (interleave--switch-to-pdf-buffer)
+        (interleave-pdf-mode -1))
       (message "Interleave disabled")
       (set-window-configuration interleave--window-configuration))))
 
@@ -499,7 +506,7 @@ Keybindings (org-mode buffer):
   :keymap  interleave-pdf-mode-map
   (when interleave-pdf-mode
     (progn
-      (setq *interleave--pdf-buffer* (current-buffer)))))
+      (setq interleave-pdf-buffer (buffer-name)))))
 
 ;;; Key-bindings
 
