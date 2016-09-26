@@ -107,6 +107,14 @@ The possible values are 'asc for ascending and 'desc for descending."
                  (const  desc))
   :group 'interleave)
 
+;;; suppress "functions are not known to be defined" warnings
+(declare-function pdf-view-next-page "pdf-view.el")
+(declare-function pdf-view-previous-page "pdf-view.el")
+(declare-function pdf-view-goto-page "pdf-view.el")
+(declare-function pdf-view-scroll-up-or-next-page "pdf-view.el")
+(declare-function pdf-view-scroll-down-or-previous-page "pdf-view.el")
+(declare-function pdf-view-current-page "pdf-view.el")
+
 (eval-after-load 'pdf-view ; if/when `pdf-tools' is loaded
   '(progn
      ;; Function wrapper for the macro `pdf-view-current-page'
@@ -527,7 +535,7 @@ Keybindings (org-mode buffer):
 (define-key interleave-pdf-mode-map (kbd "M-n")   #'interleave--sync-pdf-page-next)
 
 (define-key doc-view-mode-map (kbd "i") #'interleave--open-notes-file-for-pdf)
-(when (featurep 'pdf-view)
+(when (boundp 'pdf-view-mode-map)
   (define-key pdf-view-mode-map (kbd "i") #'interleave--open-notes-file-for-pdf))
 
 
