@@ -13,3 +13,8 @@ compile: clean-elc
 
 clean-elc:
 	$(CASK) clean-elc
+
+clean: clean-elc
+	-rm -rf dist/
+	-rm *.*\~
+
