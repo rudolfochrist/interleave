@@ -46,6 +46,7 @@
 ;;; Code:
 
 (require 'org)
+(require 'org-element)
 
 (require 'doc-view)
 ;; Redefining `doc-view-kill-proc-and-buffer' as `interleave--pdf-kill-proc-and-buffer'
