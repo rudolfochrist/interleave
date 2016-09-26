@@ -6,7 +6,7 @@ DIST = $(PWD)/dist/
 all: compile
 
 .PHONY: test-interactive
-test-interactive: package
+test-interactive: clean package
 	$(CASK) emacs -Q \
 	--eval "(setq emacs-user-directory \"$(EMACSD-LOCAL)\")" \
 	--eval "(package-install-file \"$(DIST)\")"

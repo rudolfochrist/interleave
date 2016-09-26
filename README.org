@@ -4,9 +4,14 @@
 
 Some history, what this is all about...
 
-In the past, textbooks were sometimes published as /interleaved/ editions. That meant, each page was followed by a blank page and the ambitious student/scholar had the ability to take his notes directly in her copy of the textbook. Newton and Kant were prominent representatives of this technique [fn:blumbach].
+In the past, textbooks were sometimes published as /interleaved/ editions. That meant, each page was followed
+by a blank page and ambitious students/scholars had the ability to take their notes directly in their copy of
+the textbook. Newton and Kant were prominent representatives of this technique [fn:blumbach].
 
-Nowadays textbooks (or lecture material) come in PDF format. Although almost every PDF Reader has the ability to add some notes to the PDF itself, it is not as powerful as it could be. This is what this [[https://www.gnu.org/software/emacs/][Emacs]] minor mode tries to accomplish. It presents your PDF side by side to an [[http://orgmode.org][Org Mode]] buffer with you notes. Narrowing down to just those passages that are relevant to this particular page in the document viewer.
+Nowadays textbooks (or lecture material) come in PDF format. Although almost every PDF Reader has the ability
+to add some notes to the PDF itself, it is not as powerful as it could be. This is what this [[https://www.gnu.org/software/emacs/][Emacs]] minor mode
+tries to accomplish. It presents your PDF side by side to an [[http://orgmode.org][Org Mode]] buffer with you notes. Narrowing down to
+just those passages that are relevant to this particular page in the document viewer.
 
 In a later step it should be possible to create truly /interleaved/ PDFs of your notes.
 
@@ -20,10 +25,10 @@ Add MELPA to your package archives in your init file
              '("melpa" . "http://melpa.org/packages/") t)
 #+END_SRC
 
-Then install *interleave* with
+Then install *interleave-mode* with
 
 #+BEGIN_EXAMPLE
-M-x package-install RET interleave RET
+M-x package-install RET interleave-mode RET
 #+END_EXAMPLE
 
 * Usage
@@ -37,7 +42,7 @@ Create a Org file that will keep your notes. In the Org header section (=#+TITLE
 Then you can start *interleave* by typing
 
 #+BEGIN_SRC
-M-x interleave
+M-x interleave-mode
 #+END_SRC
 
 This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual
@@ -46,7 +51,7 @@ with @@html:<kbd>@@n@@html:</kbd>@@ and @@html:<kbd>@@p@@html:</kbd>@@. Changing
 If you want to add some notes to the current page you can type @@html:<kbd>@@i@@html:</kbd>@@.
 This will create a new headline for your notes. If some notes are already present, @@html:<kbd>@@i@@html:</kbd>@@ will switch over to the other buffer.
 
-Typing @@html:<kbd>@@q@@html:</kbd>@@ in the /DocView/ will quit *interleave*.
+Typing @@html:<kbd>@@q@@html:</kbd>@@ in the /DocView/ will quit *interleave-mode*.
 
 ** Multi-PDF Notes
 
@@ -60,11 +65,11 @@ To keep a multi-PDF notes file create a headline for each PDF and set the =INTER
 :   :INTERLEAVE_PDF: cs103.pdf
 :   :END:
 
-To use =interleave= on this headline, simply place your point onto the headline an type
+To use =interleave-mode= on this headline, simply place your point onto the headline an type
 
-: M-x interleave RET
+: M-x interleave-mode RET
 
-to start =interleave= for this subtree.
+to start =interleave-mode= for this subtree.
 
 *Notice that you have to decide. It is not possible to keep multi-PDF and normal notes in the same file.*
 
@@ -78,7 +83,7 @@ to start =interleave= for this subtree.
 | @@html:<kbd>@@S-SPC@@html:</kbd>@@ | Scroll down                                 | PDF Buffer         |
 | @@html:<kbd>@@DEL@@html:</kbd>@@   | Scroll down                                 | PDF Buffer         |
 | @@html:<kbd>@@i@@html:</kbd>@@     | Insert new notes/go to notes                | PDF Buffer         |
-| @@html:<kbd>@@q@@html:</kbd>@@     | Quit =interleave=                           | PDF Buffer         |
+| @@html:<kbd>@@q@@html:</kbd>@@     | Quit =interleave-mode=                      | PDF Buffer         |
 | @@html:<kbd>@@M-.@@html:</kbd>@@   | Go to page of currently visible notes       | PDF and Org Buffer |
 | @@html:<kbd>@@M-p@@html:</kbd>@@   | Go to the page of the previous set of notes | PDF and Org Buffer |
 | @@html:<kbd>@@M-n@@html:</kbd>@@   | Go to the page of the next set of notes     | PDF and Org Buffer |
