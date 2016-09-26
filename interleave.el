@@ -98,6 +98,14 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 (defvar interleave--pdf-scroll-down-or-previous-page-fn #'doc-view-scroll-down-or-previous-page
   "Function to call for line/page scrolling in downward direction.")
 
+(defcustom interleave-sort-order 'asc
+  "Specifiy the notes' sort order in the notes buffer.
+
+The possible values are 'asc for ascending and 'desc for descending."
+  :type '(choice (const  asc)
+                 (const  desc))
+  :group 'interleave)
+
 (eval-after-load 'pdf-view ; if/when `pdf-tools' is loaded
   '(progn
      ;; Function wrapper for the macro `pdf-view-current-page'
@@ -413,14 +421,6 @@ of .pdf)."
 (defun interleave--headlines-available-p ()
   (save-excursion
     (re-search-forward "^\* .*" nil t)))
-
-(defcustom interleave-sort-order 'asc
-  "Specifiy the notes' sort order in the notes buffer.
-
-The possible values are 'asc for ascending and 'desc for descending."
-  :type '(choice (const  asc)
-                 (const  desc))
-  :group 'interleave)
 
 (defun interleave--sort-notes (sort-order)
   "Sort notes by interleave_page_property.
