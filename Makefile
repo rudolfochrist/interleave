@@ -1,23 +1,18 @@
 
 CASK ?= cask
 EMACSD-LOCAL = $(PWD)/emacs.d/
-DIST = $(PWD)/dist/
 
 all: compile
 
 .PHONY: test-interactive
-test-interactive: clean package
+test-interactive: clean compile
 	$(CASK) emacs -Q \
+	-L .
 	--eval "(setq emacs-user-directory \"$(EMACSD-LOCAL)\")" \
-	--eval "(package-install-file \"$(DIST)\")"
 
 .PHONY: compile
 compile: clean-elc
 	$(CASK) build
-
-.PHONY: package
-package: compile
-	$(CASK) package
 
 .PHONY: clean-elc
 clean-elc:
@@ -25,6 +20,6 @@ clean-elc:
 
 .PHONY: clean
 clean: clean-elc
-	-rm -rf dist/
+	-rm \#*
 	-rm *.*\~
 
