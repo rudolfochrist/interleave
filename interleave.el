@@ -48,12 +48,11 @@
 
 (require 'org)
 (require 'org-element)
-
 (require 'doc-view)
 
 ;; Redefining `doc-view-kill-proc-and-buffer' as `interleave-pdf-kill-proc-and-buffer'
 ;; because this function is obsolete in emacs 25.1 onwards.
-(define-obsolete-function-alias 'interleave--pdf-kill-proc-and-buffer 'interleave-pdf-kill-proc-and-buffer "2.0.0")
+(define-obsolete-function-alias 'interleave--pdf-kill-proc-and-buffer 'interleave-pdf-kill-proc-and-buffer "1.3.0")
 (defun interleave-pdf-kill-proc-and-buffer ()
   "Kill the current converter process and buffer."
   (interactive)
@@ -92,29 +91,29 @@ as \"/pdf/file/dir/\", \"./notes\" is interpreted as
 (defvar interleave--window-configuration nil
   "Variable to store the window configuration before interleave mode was enabled.")
 
-(define-obsolete-variable-alias 'interleave--pdf-current-page-fn 'interleave-pdf-current-page-fn "2.0.0")
+(define-obsolete-variable-alias 'interleave--pdf-current-page-fn 'interleave-pdf-current-page-fn "1.3.0")
 (defvar interleave-pdf-current-page-fn (lambda () (doc-view-current-page))
   "Function to call to display the current PDF page.")
 
-(define-obsolete-variable-alias 'interleave--pdf-next-page-fn 'interleave-pdf-next-page-fn "2.0.0")
+(define-obsolete-variable-alias 'interleave--pdf-next-page-fn 'interleave-pdf-next-page-fn "1.3.0")
 (defvar interleave-pdf-next-page-fn #'doc-view-next-page
   "Function to call to display the next PDF page.")
 
-(define-obsolete-variable-alias 'interleave--pdf-previous-page-fn 'interleave-pdf-previous-page-fn "2.0.0")
+(define-obsolete-variable-alias 'interleave--pdf-previous-page-fn 'interleave-pdf-previous-page-fn "1.3.0")
 (defvar interleave-pdf-previous-page-fn #'doc-view-previous-page
   "Function to call to display the previous PDF page.")
 
-(define-obsolete-variable-alias 'interleave--pdf-goto-page-fn 'interleave-pdf-goto-page-fn "2.0.0")
+(define-obsolete-variable-alias 'interleave--pdf-goto-page-fn 'interleave-pdf-goto-page-fn "1.3.0")
 (defvar interleave-pdf-goto-page-fn #'doc-view-goto-page
   "Function to call to jump to a given PDF page.")
 
 (define-obsolete-variable-alias
-  'interleave--pdf-scroll-up-or-next-page-fn 'interleave-pdf-scroll-up-or-next-page-fn "2.0.0")
+  'interleave--pdf-scroll-up-or-next-page-fn 'interleave-pdf-scroll-up-or-next-page-fn "1.3.0")
 (defvar interleave-pdf-scroll-up-or-next-page-fn #'doc-view-scroll-up-or-next-page
   "Function to call for line/page scrolling in upward direction." )
 
 (define-obsolete-variable-alias
-  'interleave--pdf-scroll-down-or-previous-page-fn 'interleave-pdf-scroll-down-or-previous-page-fn "2.0.0")
+  'interleave--pdf-scroll-down-or-previous-page-fn 'interleave-pdf-scroll-down-or-previous-page-fn "1.3.0")
 (defvar interleave-pdf-scroll-down-or-previous-page-fn #'doc-view-scroll-down-or-previous-page
   "Function to call for line/page scrolling in downward direction.")
 
@@ -144,13 +143,13 @@ The possible values are 'asc for ascending and 'desc for descending."
      (setq interleave-pdf-scroll-up-or-next-page-fn #'pdf-view-scroll-up-or-next-page)
      (setq interleave-pdf-scroll-down-or-previous-page-fn #'pdf-view-scroll-down-or-previous-page)))
 
-(define-obsolete-variable-alias '*interleave--page-marker* 'interleave-page-marker "2.0.0")
+(define-obsolete-variable-alias '*interleave--page-marker* 'interleave-page-marker "1.3.0")
 (make-variable-buffer-local
  (defvar interleave-page-marker 0
    "Caches the current page while scrolling"))
 
 (define-obsolete-variable-alias
-  '*interleave--multi-pdf-notes-file* 'interleave-multi-pdf-notes-file "2.0.0")
+  '*interleave--multi-pdf-notes-file* 'interleave-multi-pdf-notes-file "1.3.0")
 (make-variable-buffer-local
  (defvar interleave-multi-pdf-notes-file nil
    "Indicates if the current Org notes file is a multi-pdf notes file."))
@@ -316,7 +315,7 @@ jump to the notes buffer."
       (interleave--create-new-note page))))
 
 (define-obsolete-function-alias
-  'interleave--sync-pdf-page-current 'interleave-sync-pdf-page-current "2.0.0")
+  'interleave--sync-pdf-page-current 'interleave-sync-pdf-page-current "1.3.0")
 (defun interleave-sync-pdf-page-current ()
   "Synchronize the page in the pdf buffer to be the same as the page in
 the current narrowed down notes view."
@@ -336,7 +335,7 @@ the current narrowed down notes view."
       (funcall interleave-pdf-goto-page-fn pdf-page))))
 
 (define-obsolete-function-alias
-  'interleave--sync-pdf-page-previous 'interleave-sync-pdf-page-previous "2.0.0")
+  'interleave--sync-pdf-page-previous 'interleave-sync-pdf-page-previous "1.3.0")
 (defun interleave-sync-pdf-page-previous ()
   "Synchronize the page in the pdf buffer to be the same as the page in the
 previous set of notes."
@@ -363,7 +362,7 @@ previous set of notes."
       (org-narrow-to-subtree))))
 
 (define-obsolete-function-alias
-  'interleave--sync-pdf-page-next 'interleave-sync-pdf-page-next "2.0.0")
+  'interleave--sync-pdf-page-next 'interleave-sync-pdf-page-next "1.3.0")
 (defun interleave-sync-pdf-page-next ()
   "Synchronize the page in the pdf buffer to be the same as the page in the
 next set of notes."
@@ -391,7 +390,7 @@ next set of notes."
       (org-narrow-to-subtree))))
 
 (define-obsolete-function-alias
-  'interleave--open-notes-file-for-pdf 'interleave-open-notes-file-for-pdf "2.0.0")
+  'interleave--open-notes-file-for-pdf 'interleave-open-notes-file-for-pdf "1.3.0")
 
 ;;;###autoload
 (defun interleave-open-notes-file-for-pdf ()
@@ -446,7 +445,7 @@ of .pdf)."
       (find-file org-file-name)
       (interleave-mode))))
 
-(define-obsolete-function-alias 'interleave--quit 'interleave-quit "2.0.0")
+(define-obsolete-function-alias 'interleave--quit 'interleave-quit "1.3.0")
 (defun interleave-quit ()
   "Quit interleave mode."
   (interactive)
@@ -480,14 +479,14 @@ SORT-ORDER is either 'asc or 'desc."
 ;;; Interleave
 ;; Minor mode for the org file buffer containing notes
 
-(define-obsolete-variable-alias 'interleave-map 'interleave-mode-map "2.0.0")
+(define-obsolete-variable-alias 'interleave-map 'interleave-mode-map "1.3.0")
 (defvar interleave-mode-map (make-sparse-keymap)
   "Keymap while `interleave-mode' is active in the org file buffer.")
 
 ;;; declare interleave minor mode as obsolete.
-(define-obsolete-variable-alias 'interleave 'interleave-mode "2.0.0")
-(define-obsolete-variable-alias 'interleave-hook 'interleave-mode-hook "2.0.0")
-(define-obsolete-function-alias 'interleave 'interleave-mode "2.0.0")
+(define-obsolete-variable-alias 'interleave 'interleave-mode "1.3.0")
+(define-obsolete-variable-alias 'interleave-hook 'interleave-mode-hook "1.3.0")
+(define-obsolete-function-alias 'interleave 'interleave-mode "1.3.0")
 
 ;;;###autoload
 (define-minor-mode interleave-mode
