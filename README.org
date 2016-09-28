@@ -28,7 +28,7 @@ Add MELPA to your package archives in your init file
 Then install *interleave-mode* with
 
 #+BEGIN_EXAMPLE
-M-x package-install RET interleave-mode RET
+M-x package-install RET interleave RET
 #+END_EXAMPLE
 
 * Usage

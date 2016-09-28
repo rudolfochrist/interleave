@@ -1,4 +1,4 @@
-;;; interleave-mode.el --- Interleaving text books since 2015
+;;; interleave.el --- Interleaving text books since 2015
 
 ;; Author: Sebastian Christ <rudolfo.christ@gmail.com>
 ;; URL: https://github.com/rudolfochrist/interleave
@@ -64,21 +64,24 @@
     (kill-buffer (current-buffer))))
 
 (defcustom interleave-org-notes-dir-list '("~/org/interleave_notes" ".")
-  "List of directories to look into when opening interleave-mode notes org from a
-pdf file. The notes file is assumed to have the exact same base name as the pdf
-file (just that the file extension is .org instead of .pdf).
+  "List of directories to look into when opening interleave notes
+org from a pdf file. The notes file is assumed to have the exact
+same base name as the pdf file (just that the file extension is
+.org instead of .pdf).
 
-If the notes org file is not found, it is created in the directory returned on
-doing `car' of this list (first element of the list).
+If the notes org file is not found, it is created in the
+directory returned on doing `car' of this list (first element of
+the list).
 
-The notes file is searched in order from the first list element till the last;
-the search is aborted once the file is found.
+The notes file is searched in order from the first list element
+till the last; the search is aborted once the file is found.
 
-If a list element is \".\" or begins with \"./\", that portion is replaced with
-the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
-\"./notes\" is interpreted as \"/pdf/file/dir/notes/\"."
+If a list element is \".\" or begins with \"./\", that portion is
+replaced with the pdf directory name. e.g. \".\" is interpreted
+as \"/pdf/file/dir/\", \"./notes\" is interpreted as
+\"/pdf/file/dir/notes/\"."
   :type '(repeat directory)
-  :group 'interleave-mode)
+  :group 'interleave)
 
 (defvar interleave-org-buffer nil
   "Org notes buffer name.")
@@ -87,7 +90,7 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
   "Name of PDF buffer associated with `interleave-org-buffer'.")
 
 (defvar interleave--window-configuration nil
-  "Variable to store the window configuration before interleave-mode mode was enabled.")
+  "Variable to store the window configuration before interleave mode was enabled.")
 
 (define-obsolete-variable-alias 'interleave--pdf-current-page-fn 'interleave-pdf-current-page-fn "2.0.0")
 (defvar interleave-pdf-current-page-fn (lambda () (doc-view-current-page))
@@ -121,7 +124,7 @@ the pdf directory name. e.g. \".\" is interpreted as \"/pdf/file/dir/\",
 The possible values are 'asc for ascending and 'desc for descending."
   :type '(choice (const  asc)
                  (const  desc))
-  :group 'interleave-mode)
+  :group 'interleave)
 
 ;;; suppress "functions are not known to be defined" warnings
 (declare-function pdf-view-next-page "pdf-view.el")
@@ -445,7 +448,7 @@ of .pdf)."
 
 (define-obsolete-function-alias 'interleave--quit 'interleave-quit "2.0.0")
 (defun interleave-quit ()
-  "Quit interleave-mode mode."
+  "Quit interleave mode."
   (interactive)
   (with-current-buffer interleave-org-buffer
     (widen)
@@ -574,6 +577,6 @@ Keybindings (org-mode buffer):
   (define-key pdf-view-mode-map (kbd "i") #'interleave-open-notes-file-for-pdf))
 
 
-(provide 'interleave-mode)
+(provide 'interleave)
 
-;;; interleave-mode.el ends here
+;;; interleave.el ends here
