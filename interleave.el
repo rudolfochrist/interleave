@@ -24,14 +24,14 @@
 ;; In the past, textbooks were sometimes published as 'interleaved'
 ;; editions.  That meant, each page was followed by a blank page and
 ;; ambitious students/scholars had the ability to take their notes
-;; directly in their copy of the textbook. Newton and Kant were
+;; directly in their copy of the textbook.  Newton and Kant were
 ;; prominent representatives of this technique.
 
-;; Nowadays textbooks (or lecture material) come in PDF format. Although almost
+;; Nowadays textbooks (or lecture material) come in PDF format.  Although almost
 ;; every PDF Reader has the ability to add some notes to the PDF itself, it is
 ;; not as powerful as it could be.
 
-;; This is what this minor mode tries to accomplish. It presents your PDF side by
+;; This is what this minor mode tries to accomplish.  It presents your PDF side by
 ;; side to an [[http://orgmode.org][Org Mode]] buffer with your notes, narrowing
 ;; down to just those passages that are relevant to the particular page in the
 ;; document viewer.
@@ -63,8 +63,9 @@
     (kill-buffer (current-buffer))))
 
 (defcustom interleave-org-notes-dir-list '("~/org/interleave_notes" ".")
-  "List of directories to look into when opening interleave notes
-org from a pdf file. The notes file is assumed to have the exact
+  "List of directories to look into when opening notes org from a pdf file.
+
+The notes file is assumed to have the exact
 same base name as the pdf file (just that the file extension is
 .org instead of .pdf).
 
@@ -76,7 +77,7 @@ The notes file is searched in order from the first list element
 till the last; the search is aborted once the file is found.
 
 If a list element is \".\" or begins with \"./\", that portion is
-replaced with the pdf directory name. e.g. \".\" is interpreted
+replaced with the pdf directory name.  e.g. \".\" is interpreted
 as \"/pdf/file/dir/\", \"./notes\" is interpreted as
 \"/pdf/file/dir/notes/\"."
   :type '(repeat directory)
@@ -155,7 +156,7 @@ The possible values are 'asc for ascending and 'desc for descending."
    "Indicates if the current Org notes file is a multi-pdf notes file."))
 
 (defun interleave--find-pdf-path (buffer)
-  "Searches for the `interleave_pdf' property in BUFFER and extracts it when found."
+  "Search the `interleave_pdf' property in BUFFER and extracts it when found."
   (with-current-buffer buffer
     (save-restriction
       (widen)
@@ -165,6 +166,7 @@ The possible values are 'asc for ascending and 'desc for descending."
           (match-string 1))))))
 
 (defun interleave--headline-pdf-path (buffer)
+  "Return the INTERLEAVE_PDF property of the current headline in BUFFER."
   (with-current-buffer buffer
     (save-excursion
       (let ((headline (org-element-at-point)))
@@ -175,8 +177,7 @@ The possible values are 'asc for ascending and 'desc for descending."
           (org-entry-get nil "interleave_pdf"))))))
 
 (defun interleave--open-file (split-window)
-  "Opens the interleave-mode pdf file in `doc-view-mode'/`pdf-view-mode'  besides the
-notes buffer.
+  "Opens the pdf file in besides the notes buffer.
 
 SPLIT-WINDOW is a function that actually splits the window, so it must be either
 `split-window-right' or `split-window-below'."
@@ -207,15 +208,19 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
 (defun interleave--goto-search-position ()
   "Move point to the search start position.
 
-For multi-pdf notes this is the outermost parent headline. For everything else
+For multi-pdf notes this is the outermost parent headline.  For everything else
 this is the beginning of the buffer."
   (if interleave-multi-pdf-notes-file
       (interleave--goto-parent-headline)
     (goto-char (point-min))))
 
 (defun interleave--go-to-page-note (page)
-  "Searches the notes buffer for an headline with the `interleave_page_note'
-property set to PAGE. It narrows the subtree when found."
+  "Look up the notes for the current pdf PAGE.
+
+Effectively resolves the headline with the interleave_page_note
+property set to PAGE.
+
+ It narrows the subtree when found."
   (with-current-buffer interleave-org-buffer
     (save-excursion
       (widen)
@@ -231,19 +236,19 @@ property set to PAGE. It narrows the subtree when found."
         t))))
 
 (defun interleave-go-to-next-page ()
-  "Go to the next page in PDF. Look up for available notes."
+  "Go to the next page in PDF.  Look up for available notes."
   (interactive)
   (funcall interleave-pdf-next-page-fn)
   (interleave--go-to-page-note (funcall interleave-pdf-current-page-fn)))
 
 (defun interleave-go-to-previous-page ()
-  "Go to the previous page in PDF. Look up for available notes."
+  "Go to the previous page in PDF.  Look up for available notes."
   (interactive)
   (funcall interleave-pdf-previous-page-fn)
   (interleave--go-to-page-note (funcall interleave-pdf-current-page-fn)))
 
 (defun interleave-scroll-up ()
-  "Scroll up the PDF. Look up for available notes."
+  "Scroll up the PDF.  Look up for available notes."
   (interactive)
   (setq interleave-page-marker (funcall interleave-pdf-current-page-fn))
   (funcall interleave-pdf-scroll-up-or-next-page-fn)
@@ -251,7 +256,7 @@ property set to PAGE. It narrows the subtree when found."
     (interleave--go-to-page-note (funcall interleave-pdf-current-page-fn))))
 
 (defun interleave-scroll-down ()
-  "Scroll down the PDF. Look up for available notes."
+  "Scroll down the PDF.  Look up for available notes."
   (interactive)
   (setq interleave-page-marker (funcall interleave-pdf-current-page-fn))
   (funcall interleave-pdf-scroll-down-or-previous-page-fn)
@@ -259,6 +264,10 @@ property set to PAGE. It narrows the subtree when found."
     (interleave--go-to-page-note (funcall interleave-pdf-current-page-fn))))
 
 (defun interleave--switch-to-org-buffer (&optional insert-newline-maybe)
+  "Switch to the notes buffer.
+
+Inserts a newline into the notes buffer if INSERT-NEWLINE-MAYBE
+is non-nil."
   (if (or (derived-mode-p 'doc-view-mode)
           (derived-mode-p 'pdf-view-mode))
       (switch-to-buffer-other-window interleave-org-buffer)
@@ -279,7 +288,7 @@ property set to PAGE. It narrows the subtree when found."
 (defun interleave--goto-insert-position ()
   "Move the point to the right insert postion.
 
-For multi-pdf notes this is the end of the subtree. For everything else
+For multi-pdf notes this is the end of the subtree.  For everything else
 this is the end of the buffer"
   (if (not interleave-multi-pdf-notes-file)
       (goto-char (point-max))
@@ -287,6 +296,9 @@ this is the end of the buffer"
     (org-end-of-subtree)))
 
 (defun interleave--insert-heading-respect-content ()
+  "Create a new heading in the notes buffer.
+
+Adjusts the heading level automatically."
   (org-insert-heading-respect-content)
   (let ((new-heading (org-element-at-point)))
     (when (and interleave-multi-pdf-notes-file
@@ -294,7 +306,7 @@ this is the end of the buffer"
       (org-demote))))
 
 (defun interleave--create-new-note (page)
-  "Creates a new headline for the page PAGE."
+  "Create a new headline for the page PAGE."
   (with-current-buffer interleave-org-buffer
     (save-excursion
       (widen)
@@ -306,8 +318,10 @@ this is the end of the buffer"
   (interleave--switch-to-org-buffer t))
 
 (defun interleave-add-note ()
-  "Add note for the current page. If there are already notes for this page,
-jump to the notes buffer."
+  "Add note for the current page.
+
+If there are already notes for this page, jump to the notes
+buffer."
   (interactive)
   (let ((page (funcall interleave-pdf-current-page-fn)))
     (if (interleave--go-to-page-note page)
@@ -317,8 +331,7 @@ jump to the notes buffer."
 (define-obsolete-function-alias
   'interleave--sync-pdf-page-current 'interleave-sync-pdf-page-current "1.3.0")
 (defun interleave-sync-pdf-page-current ()
-  "Synchronize the page in the pdf buffer to be the same as the page in
-the current narrowed down notes view."
+  "Open PDF page for currently visible notes."
   (interactive)
   (interleave--switch-to-org-buffer)
   (let (pdf-page)
@@ -459,6 +472,7 @@ of .pdf)."
   (interleave-pdf-kill-proc-and-buffer))
 
 (defun interleave--headlines-available-p ()
+  "True if there are headings in the notes buffer."
   (save-excursion
     (re-search-forward "^\* .*" nil t)))
 
