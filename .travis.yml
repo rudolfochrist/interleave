@@ -1,0 +1,28 @@
+language: emacs-lisp
+sudo: false
+
+env:
+  global:
+    - PATH="$HOME/bin:$PATH"
+  matrix:
+    - EMACS_VERSION=24.4
+    - EMACS_VERSION=24.5
+    - EMACS_VERSION=25.1
+    - EMACS_VERSION=snapshot
+
+matrix:
+  fast_failure: true
+  allow_failures:
+    - env: EMACS_VERSION=snapshot
+
+before_install:
+  - wget 'https://raw.githubusercontent.com/flycheck/emacs-travis/master/emacs-travis.mk'
+  - make -f emacs-travis.mk install_emacs
+  - make -f emacs-travis.mk install_cask
+  - make -f emacs-travis.mk install_texinfo
+
+install:
+  - cask install
+
+script:
+  - make test
