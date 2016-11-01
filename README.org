@@ -1,4 +1,5 @@
 [[http://melpa.org/#/interleave][file:http://melpa.org/packages/interleave-badge.svg]]
+[[file:https://travis-ci.org/rudolfochrist/interleave.svg?branch=master]]
 
 * Interleaved Textbooks?
 
