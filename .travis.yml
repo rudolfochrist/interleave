@@ -2,23 +2,17 @@ language: emacs-lisp
 sudo: false
 
 env:
-  matrix:
-    - EMACS_VERSION=emacs-24.4-travis
-    - EMACS_VERSION=emacs-24.5-travis
-    - EMACS_VERSION=emacs-25.1-travis
-    - EMACS_VERSION=emacs-git-snapshot-travis
-
-matrix:
-  fast_failure: true
-  allow_failures:
-    - env: EMACS_VERSION=emacs-git-snapshot-travis
+  - PATH="$HOME/.cask/bin:$PATH"
 
 before_install:
-  # EVM
-  - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > x.sh && source ./x.sh
+  - apt-add-repository -y ppa:cassou/emacs
+  - apt-add-repository -y ppa:ubuntu-elisp
+  - apt-get update -qq
+  - apt-get install -y emacs24
+  - apt-get install -y emacs-snapshot
+  -  curl -fsSL https://raw.githubusercontent.com/cask/cask/master/go | python
 
 install:
-  - evm install $EMACS_VERSION --use --skip
   - cask install
 
 script:
