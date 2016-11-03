@@ -2,32 +2,23 @@ language: emacs-lisp
 sudo: false
 
 env:
-  global:
-    - PATH="$HOME/bin:$PATH"
   matrix:
-    - EMACS_VERSION=24.4
-    - EMACS_VERSION=24.5
-    - EMACS_VERSION=25.1
-    - EMACS_VERSION=snapshot
+    - EMACS_VERSION=emacs-24.4-travis
+    - EMACS_VERSION=emacs-24.5-travis
+    - EMACS_VERSION=emacs-25.1-travis
+    - EMACS_VERSION=emacs-git-snapshot-travis
 
 matrix:
   fast_failure: true
   allow_failures:
-    - env: EMACS_VERSION=snapshot
+    - env: EMACS_VERSION=emacs-git-snapshot-travis
 
 before_install:
-  - wget 'https://raw.githubusercontent.com/flycheck/emacs-travis/master/emacs-travis.mk'
-  - make -f emacs-travis.mk install_emacs
-  - make -f emacs-travis.mk install_cask
-  - make -f emacs-travis.mk install_texinfo
+  - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > x.sh && source ./x.sh
 
 install:
-  - cask install
-
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
+  - evm install $EMACS_VERSION --use --skip
 
 script:
+  - emacs --version
   - make test
