@@ -103,6 +103,7 @@ as \"/pdf/file/dir/\", \"./notes\" is interpreted as
 Use WINDOW for optional window properties passed to `image-mode'."
   (image-mode-window-get 'page window))
 
+;;;###autoload
 (define-obsolete-variable-alias 'interleave--pdf-current-page-fn 'interleave-pdf-current-page-fn "1.3.0")
 (defvar interleave-pdf-current-page-fn #'interleave--current-page
   "Function to call to display the current PDF page.")
