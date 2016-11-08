@@ -49,6 +49,11 @@
 (require 'org)
 (require 'org-element)
 (require 'doc-view)
+(require 'image-mode)
+
+;;; If pdf-tools are installed try to use them,
+;;; but fail silently.
+(require 'pdf-tools nil t)
 
 ;; Redefining `doc-view-kill-proc-and-buffer' as `interleave-pdf-kill-proc-and-buffer'
 ;; because this function is obsolete in emacs 25.1 onwards.
@@ -92,9 +97,15 @@ as \"/pdf/file/dir/\", \"./notes\" is interpreted as
 (defvar interleave--window-configuration nil
   "Variable to store the window configuration before interleave mode was enabled.")
 
+(defun interleave--current-page (&optional window)
+  "Return the page number of the current page.
+
+Use WINDOW for optional window properties passed to `image-mode'."
+  (image-mode-window-get 'page window))
+
 ;;;###autoload
 (define-obsolete-variable-alias 'interleave--pdf-current-page-fn 'interleave-pdf-current-page-fn "1.3.0")
-(defvar interleave-pdf-current-page-fn (lambda () (doc-view-current-page))
+(defvar interleave-pdf-current-page-fn #'interleave--current-page
   "Function to call to display the current PDF page.")
 
 ;;;###autoload
@@ -138,17 +149,15 @@ The possible values are 'asc for ascending and 'desc for descending."
 (declare-function pdf-view-goto-page "pdf-view.el")
 (declare-function pdf-view-scroll-up-or-next-page "pdf-view.el")
 (declare-function pdf-view-scroll-down-or-previous-page "pdf-view.el")
-(declare-function pdf-view-current-page "pdf-view.el")
 
 (eval-after-load 'pdf-view ; if/when `pdf-tools' is loaded
   '(progn
      ;; Function wrapper for the macro `pdf-view-current-page'
-     (setq interleave-pdf-current-page-fn (lambda () (pdf-view-current-page)))
-     (setq interleave-pdf-next-page-fn #'pdf-view-next-page)
-     (setq interleave-pdf-previous-page-fn #'pdf-view-previous-page)
-     (setq interleave-pdf-goto-page-fn #'pdf-view-goto-page)
-     (setq interleave-pdf-scroll-up-or-next-page-fn #'pdf-view-scroll-up-or-next-page)
-     (setq interleave-pdf-scroll-down-or-previous-page-fn #'pdf-view-scroll-down-or-previous-page)))
+     (setq interleave-pdf-next-page-fn #'pdf-view-next-page
+           interleave-pdf-previous-page-fn #'pdf-view-previous-page
+           interleave-pdf-goto-page-fn #'pdf-view-goto-page
+           interleave-pdf-scroll-up-or-next-page-fn #'pdf-view-scroll-up-or-next-page
+           interleave-pdf-scroll-down-or-previous-page-fn #'pdf-view-scroll-down-or-previous-page)))
 
 (define-obsolete-variable-alias '*interleave--page-marker* 'interleave-page-marker "1.3.0")
 (make-variable-buffer-local
