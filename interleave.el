@@ -92,27 +92,33 @@ as \"/pdf/file/dir/\", \"./notes\" is interpreted as
 (defvar interleave--window-configuration nil
   "Variable to store the window configuration before interleave mode was enabled.")
 
+;;;###autoload
 (define-obsolete-variable-alias 'interleave--pdf-current-page-fn 'interleave-pdf-current-page-fn "1.3.0")
 (defvar interleave-pdf-current-page-fn (lambda () (doc-view-current-page))
   "Function to call to display the current PDF page.")
 
+;;;###autoload
 (define-obsolete-variable-alias 'interleave--pdf-next-page-fn 'interleave-pdf-next-page-fn "1.3.0")
 (defvar interleave-pdf-next-page-fn #'doc-view-next-page
   "Function to call to display the next PDF page.")
 
+;;;###autoload
 (define-obsolete-variable-alias 'interleave--pdf-previous-page-fn 'interleave-pdf-previous-page-fn "1.3.0")
 (defvar interleave-pdf-previous-page-fn #'doc-view-previous-page
   "Function to call to display the previous PDF page.")
 
+;;;###autoload
 (define-obsolete-variable-alias 'interleave--pdf-goto-page-fn 'interleave-pdf-goto-page-fn "1.3.0")
 (defvar interleave-pdf-goto-page-fn #'doc-view-goto-page
   "Function to call to jump to a given PDF page.")
 
+;;;###autoload
 (define-obsolete-variable-alias
   'interleave--pdf-scroll-up-or-next-page-fn 'interleave-pdf-scroll-up-or-next-page-fn "1.3.0")
 (defvar interleave-pdf-scroll-up-or-next-page-fn #'doc-view-scroll-up-or-next-page
   "Function to call for line/page scrolling in upward direction." )
 
+;;;###autoload
 (define-obsolete-variable-alias
   'interleave--pdf-scroll-down-or-previous-page-fn 'interleave-pdf-scroll-down-or-previous-page-fn "1.3.0")
 (defvar interleave-pdf-scroll-down-or-previous-page-fn #'doc-view-scroll-down-or-previous-page
@@ -402,6 +408,7 @@ next set of notes."
           (funcall interleave-pdf-goto-page-fn pdf-page))
       (org-narrow-to-subtree))))
 
+;;;###autoload
 (define-obsolete-function-alias
   'interleave--open-notes-file-for-pdf 'interleave-open-notes-file-for-pdf "1.3.0")
 
@@ -498,8 +505,13 @@ SORT-ORDER is either 'asc or 'desc."
   "Keymap while `interleave-mode' is active in the org file buffer.")
 
 ;;; declare interleave minor mode as obsolete.
+;;;###autoload
 (define-obsolete-variable-alias 'interleave 'interleave-mode "1.3.0")
+
+;;;###autoload
 (define-obsolete-variable-alias 'interleave-hook 'interleave-mode-hook "1.3.0")
+
+;;;###autoload
 (define-obsolete-function-alias 'interleave 'interleave-mode "1.3.0")
 
 ;;;###autoload
