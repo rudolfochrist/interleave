@@ -38,4 +38,4 @@ install:
   - cask install
 
 script:
-  - make test
+  - make compile test
