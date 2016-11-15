@@ -222,10 +222,15 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
   "Traverse the tree until the parent headline.
 
 Consider a headline with property PROPERTY as parent headline."
-  (unless (and (eql (org-element-type (org-element-at-point)) 'headline)
-               (org-entry-get (point) property))
-    (org-up-element)
-    (interleave--goto-parent-headline property)))
+  (catch 'done
+    (if (and (eql (org-element-type (org-element-at-point)) 'headline)
+             (org-entry-get (point) property))
+        t 
+      (condition-case nil
+          (org-up-element)
+        ('error
+         (throw 'done nil)))
+      (interleave--goto-parent-headline property))))
 
 (defun interleave--goto-search-position ()
   "Move point to the search start position.
@@ -396,8 +401,15 @@ next set of notes."
   (interactive)
   (interleave--switch-to-org-buffer)
   (widen)
-  (interleave--goto-parent-headline interleave--page-note-prop)
-  (org-forward-heading-same-level 1)
+  ;; go to the first notes heading if we're not at an headline or if
+  ;; we're on multi-pdf heading. This is useful to quickly jump to the
+  ;; notes if they start at page 96 or so. Image you need to skip page
+  ;; for page.
+  (if (interleave--goto-parent-headline interleave--page-note-prop)
+      (org-forward-heading-same-level 1)
+    (when interleave-multi-pdf-notes-file
+      (org-show-subtree))
+    (outline-next-visible-heading 1))
   (org-narrow-to-subtree)
   (org-show-subtree)
   (org-cycle-hide-drawers t)
