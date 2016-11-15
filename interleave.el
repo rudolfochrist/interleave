@@ -171,6 +171,12 @@ The possible values are 'asc for ascending and 'desc for descending."
  (defvar interleave-multi-pdf-notes-file nil
    "Indicates if the current Org notes file is a multi-pdf notes file."))
 
+(defconst interleave--page-note-prop "interleave_page_note"
+  "The page note property string.")
+
+(defconst interleave--pdf-prop "interleave_pdf"
+  "The pdf property string.")
+
 (defun interleave--find-pdf-path (buffer)
   "Search the `interleave_pdf' property in BUFFER and extracts it when found."
   (with-current-buffer buffer
@@ -188,9 +194,9 @@ The possible values are 'asc for ascending and 'desc for descending."
       (let ((headline (org-element-at-point)))
         (when (and (equal (org-element-type headline) 'headline)
                    (equal (org-element-property :level headline) 1)
-                   (org-entry-get nil "interleave_pdf"))
+                   (org-entry-get nil interleave--pdf-prop))
           (setq interleave-multi-pdf-notes-file t)
-          (org-entry-get nil "interleave_pdf"))))))
+          (org-entry-get nil interleave--pdf-prop))))))
 
 (defun interleave--open-file (split-window)
   "Opens the pdf file in besides the notes buffer.
@@ -227,7 +233,7 @@ Consider a headline with property PROPERTY as parent headline."
 For multi-pdf notes this is the outermost parent headline.  For everything else
 this is the beginning of the buffer."
   (if interleave-multi-pdf-notes-file
-      (interleave--goto-parent-headline "interleave_pdf")
+      (interleave--goto-parent-headline interleave--pdf-prop)
     (goto-char (point-min))))
 
 (defun interleave--go-to-page-note (page)
@@ -310,7 +316,7 @@ For multi-pdf notes this is the end of the subtree.  For everything else
 this is the end of the buffer"
   (if (not interleave-multi-pdf-notes-file)
       (goto-char (point-max))
-    (interleave--goto-parent-headline "interleave_pdf")
+    (interleave--goto-parent-headline interleave--pdf-prop)
     (org-end-of-subtree)))
 
 (defun interleave--insert-heading-respect-content ()
@@ -331,7 +337,7 @@ Adjusts the heading level automatically."
       (interleave--goto-insert-position)
       (interleave--insert-heading-respect-content)
       (insert (format "Notes for page %d" page))
-      (org-set-property "interleave_page_note" (number-to-string page))
+      (org-set-property interleave--page-note-prop (number-to-string page))
       (org-narrow-to-subtree)
       (org-cycle-hide-drawers t)))
   (interleave--switch-to-org-buffer t))
@@ -354,7 +360,7 @@ buffer."
   (interactive)
   (interleave--switch-to-org-buffer)
   (let ((pdf-page (string-to-number
-                   (org-entry-get-with-inheritance "interleave_page_note"))))
+                   (org-entry-get-with-inheritance interleave--page-note-prop))))
     (when (and (integerp pdf-page)
                (> pdf-page 0)) ; The page number needs to be a positive integer
       (org-narrow-to-subtree)
@@ -369,13 +375,13 @@ previous set of notes."
   (interactive)
   (interleave--switch-to-org-buffer)
   (widen)
-  (interleave--goto-parent-headline "interleave_page_note")
+  (interleave--goto-parent-headline interleave--page-note-prop)
   (org-backward-heading-same-level 1)
   (org-narrow-to-subtree)
   (org-show-subtree)
   (org-cycle-hide-drawers t)
   (let ((pdf-page (string-to-number
-                   (org-entry-get-with-inheritance "interleave_page_note")))) 
+                   (org-entry-get-with-inheritance interleave--page-note-prop)))) 
     (when (and (integerp pdf-page)
                (> pdf-page 0)) ; The page number needs to be a positive integer
 
@@ -390,13 +396,13 @@ next set of notes."
   (interactive)
   (interleave--switch-to-org-buffer)
   (widen)
-  (interleave--goto-parent-headline "interleave_page_note")
+  (interleave--goto-parent-headline interleave--page-note-prop)
   (org-forward-heading-same-level 1)
   (org-narrow-to-subtree)
   (org-show-subtree)
   (org-cycle-hide-drawers t)
   (let ((pdf-page (string-to-number
-                   (org-entry-get (point) "interleave_page_note"))))
+                   (org-entry-get (point) interleave--page-note-prop))))
     (when (and (integerp pdf-page)
                (> pdf-page 0)) ; The page number needs to be a positive integer
       (interleave--switch-to-pdf-buffer)
@@ -481,6 +487,7 @@ of .pdf)."
   "Sort notes by interleave_page_property.
 
 SORT-ORDER is either 'asc or 'desc."
+<<<<<<< HEAD
   (condition-case nil
       (org-sort-entries nil ?f
                         (lambda ()
@@ -492,6 +499,17 @@ SORT-ORDER is either 'asc or 'desc."
                             #'<
                           #'>))
     ('user-error nil)))
+=======
+  (org-sort-entries nil ?f
+                    (lambda ()
+                      (or (string-to-number
+                           (org-entry-get nil
+                                          interleave--page-note-prop))
+                          -1))
+                    (if (eq sort-order 'asc)
+                        #'<
+                      #'>)))
+>>>>>>> Refactor literal string to constants.
 
 ;;; Interleave
 ;; Minor mode for the org file buffer containing notes
