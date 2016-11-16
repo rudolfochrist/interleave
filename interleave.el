@@ -498,7 +498,6 @@ of .pdf)."
   "Sort notes by interleave_page_property.
 
 SORT-ORDER is either 'asc or 'desc."
-<<<<<<< HEAD
   (condition-case nil
       (org-sort-entries nil ?f
                         (lambda ()
@@ -510,17 +509,6 @@ SORT-ORDER is either 'asc or 'desc."
                             #'<
                           #'>))
     ('user-error nil)))
-=======
-  (org-sort-entries nil ?f
-                    (lambda ()
-                      (or (string-to-number
-                           (org-entry-get nil
-                                          interleave--page-note-prop))
-                          -1))
-                    (if (eq sort-order 'asc)
-                        #'<
-                      #'>)))
->>>>>>> Refactor literal string to constants.
 
 ;;; Interleave
 ;; Minor mode for the org file buffer containing notes
