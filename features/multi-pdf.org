@@ -1,0 +1,10 @@
+
+* Quotes
+:PROPERTIES:
+:interleave_pdf: quotes.pdf
+:END:
+
+* Slides
+:PROPERTIES:
+:interleave_pdf: slides.pdf
+:END:

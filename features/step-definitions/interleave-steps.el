@@ -2,6 +2,10 @@
 ;; files in this directory whose names end with "-steps.el" will be
 ;; loaded automatically by Ecukes.
 
+(And "^debug$"
+     (lambda ()
+       (print (buffer-name))))
+
 (Given "^I open the file \"\\([^\"]+\\)\"$"
        (lambda (name)
          (find-file (concat interleave-features-path "/" name))))
@@ -21,3 +25,7 @@
 (When "^print buffer name$"
       (lambda ()
         (print (buffer-file-name))))
+
+(When "^I quit interleave-mode$"
+      (lambda ()
+        (interleave--quit)))
