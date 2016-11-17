@@ -4,6 +4,7 @@ Scenario: Starting interleave-mode
   Then I should see buffer "notes.org"
   And I should see buffer "quotes.pdf"
   And I should be in buffer "quotes.pdf"
+  And I quit interleave-mode
 
 Scenario: Add note
   Given I open the file "notes.org"
@@ -12,6 +13,7 @@ Scenario: Add note
   And I insert "some notes"
   Then I should be in buffer "notes.org"
   And I should see "some notes"
+  And I quit interleave-mode
 
 Scenario: Switch between notes
   Given I open the file "notes.org"
@@ -28,3 +30,4 @@ Scenario: Switch between notes
   And I switch to buffer "notes.org"
   Then I should not see "including Common Lisp"
   And I should see "great"
+  And I quit interleave-mode
