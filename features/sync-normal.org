@@ -1,0 +1,27 @@
+#+INTERLEAVE_PDF: quotes.pdf
+
+* Notes for page 2
+:PROPERTIES:
+:interleave_page_note: 2
+:END:
+
+notes 2
+
+* Notes for page 4
+:PROPERTIES:
+:interleave_page_note: 4
+:END:
+
+notes 4
+
+** Sub 1
+
+*** Sub 1.1
+
+find me
+* Notes for page 6
+:PROPERTIES:
+:interleave_page_note: 6
+:END:
+
+use the source!

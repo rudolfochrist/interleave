@@ -6,6 +6,10 @@
      (lambda ()
        (print (buffer-name))))
 
+(Then "^sleep \"\\([^\"]+\\)\"$"
+      (lambda (arg)
+        (sleep-for (string-to-number arg))))
+
 (Given "^I open the file \"\\([^\"]+\\)\"$"
        (lambda (name)
          (find-file (concat interleave-features-path "/" name))))
@@ -22,10 +26,19 @@
         (When "I type \"interleave-mode\"")
         (When "I execute the action chain")))
 
-(When "^print buffer name$"
-      (lambda ()
-        (print (buffer-file-name))))
-
 (When "^I quit interleave-mode$"
       (lambda ()
         (interleave--quit)))
+
+(Then "^the current page should be \"\\([^\"]+\\)\"$"
+      (lambda (arg)
+        (cl-assert (= (string-to-number arg)
+                      (funcall interleave-pdf-current-page-fn))
+                   nil
+                   "%s is not equal to %s"
+                   arg
+                   (funcall interleave-pdf-current-page-fn))))
+
+(And "^I widen the buffer$"
+     (lambda ()
+       (widen)))
