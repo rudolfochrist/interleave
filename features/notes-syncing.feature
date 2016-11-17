@@ -20,7 +20,6 @@ Scenario: Notes synchronization-navigation in normal notes documents
   And I should not see "notes 4"
   And I quit interleave-mode
 
-@wip
 Scenario: Sync pdf page to current set of notes
   Given I open the file "sync-normal.org"
   And I start interleave-mode

@@ -16,9 +16,11 @@
 
 (Then "^I should see buffer \"\\([^\"]+\\)\"$"
       (lambda (name)
-        (not (null (cl-remove-if-not (lambda (buffer)
-                                       (string= name (buffer-name buffer)))
-                                     (buffer-list))))))
+        (cl-assert (not (null (cl-remove-if-not (lambda (buffer)
+                                                  (string= name (buffer-name buffer)))
+                                                (buffer-list))))
+                   nil
+                   "Buffer %s not found" name)))
 (When "^I start interleave-mode$"
       (lambda ()
         (When "I start an action chain")

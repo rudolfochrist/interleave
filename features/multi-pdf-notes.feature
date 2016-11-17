@@ -3,7 +3,7 @@ Scenario: Starting interleave-mode on multi-pdf notes
   When I go to word "Quotes"
   And I start interleave-mode
   Then I should see buffer "multi-pdf.org"
-  And I should see buffer "quotes.org"
+  And I should see buffer "quotes.pdf"
   When I quit interleave-mode
   And I switch to buffer "multi-pdf.org"
   And I go to word "Slides"
