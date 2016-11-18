@@ -47,7 +47,12 @@ M-x interleave-mode
 #+END_SRC
 
 This will display the PDF side by side to the org buffer for your notes. You can navigate the PDF as usual
-with @@html:<kbd>@@n@@html:</kbd>@@ and @@html:<kbd>@@p@@html:</kbd>@@. Changing the page of the PDF will also narrow to the notes that are meant for this particular PDF page.
+with @@html:<kbd>@@n@@html:</kbd>@@ and @@html:<kbd>@@p@@html:</kbd>@@. Changing the page of the PDF will also
+narrow to the notes that are meant for this particular PDF page.
+
+The split direction is determined by the customizable variable =interleave-split-direction=. When
+=interleave-mode= is invoked with a prefix argument the inverse split direction is used e.g. if
+=interleave-split-direction= is set to =vertical= the buffer is split horizontally.
 
 If you want to add some notes to the current page you can type @@html:<kbd>@@i@@html:</kbd>@@.
 This will create a new headline for your notes. If some notes are already present, @@html:<kbd>@@i@@html:</kbd>@@ will switch over to the other buffer.
