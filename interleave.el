@@ -155,10 +155,10 @@ The possible values are 'asc for ascending and 'desc for descending."
                  (const horizontal)))
 
 (defcustom interleave-split-lines nil
-  "Specify the number of lines the PDF buffer should be increased or decreased. 
+  "Specify the number of lines the PDF buffer should be increased or decreased.
 
-If nil both buffers are split equally. If the number is positive,
-the window is enlarged. If the number is negative, the window is
+If nil both buffers are split equally.  If the number is positive,
+the window is enlarged.  If the number is negative, the window is
 shrunken.
 
 If `interleave-split-direction' is 'vertical then the number is
@@ -252,7 +252,7 @@ Consider a headline with property PROPERTY as parent headline."
   (catch 'done
     (if (and (eql (org-element-type (org-element-at-point)) 'headline)
              (org-entry-get (point) property))
-        t 
+        t
       (condition-case nil
           (org-up-element)
         ('error
@@ -402,8 +402,9 @@ buffer."
 (define-obsolete-function-alias
   'interleave--sync-pdf-page-previous 'interleave-sync-pdf-page-previous "1.3.0")
 (defun interleave-sync-pdf-page-previous ()
-  "Synchronize the page in the pdf buffer to be the same as the page in the
-previous set of notes."
+  "Move to the previous set of notes.
+
+This show the previous notes and synchronizes the PDF to the right page number."
   (interactive)
   (interleave--switch-to-org-buffer)
   (widen)
@@ -413,7 +414,7 @@ previous set of notes."
   (org-show-subtree)
   (org-cycle-hide-drawers t)
   (let ((pdf-page (string-to-number
-                   (org-entry-get-with-inheritance interleave--page-note-prop)))) 
+                   (org-entry-get-with-inheritance interleave--page-note-prop))))
     (when (and (integerp pdf-page)
                (> pdf-page 0)) ; The page number needs to be a positive integer
 
@@ -423,8 +424,9 @@ previous set of notes."
 (define-obsolete-function-alias
   'interleave--sync-pdf-page-next 'interleave-sync-pdf-page-next "1.3.0")
 (defun interleave-sync-pdf-page-next ()
-  "Synchronize the page in the pdf buffer to be the same as the page in the
-next set of notes."
+  "Move to the next set of notes.
+
+This shows the next notes and synchronizes the PDF to the right page number."
   (interactive)
   (interleave--switch-to-org-buffer)
   (widen)
@@ -559,7 +561,7 @@ based on a combination of `current-prefix-arg' and
 
 (define-obsolete-variable-alias 'interleave-map 'interleave-mode-map "1.3.0")
 (defvar interleave-mode-map (make-sparse-keymap)
-  "Keymap while `interleave-mode' is active in the org file buffer.")
+  "Keymap while command `interleave-mode' is active in the org file buffer.")
 
 ;;; declare interleave minor mode as obsolete.
 ;;;###autoload
@@ -631,7 +633,7 @@ Keybindings (org-mode buffer):
 ;; Minor mode for the pdf file buffer associated with the notes
 
 (defvar interleave-pdf-mode-map (make-sparse-keymap)
-  "Keymap while `interleave-pdf-mode' is active in the pdf file buffer.")
+  "Keymap while command `interleave-pdf-mode' is active in the pdf file buffer.")
 
 ;;;###autoload
 (define-minor-mode interleave-pdf-mode
