@@ -154,6 +154,19 @@ The possible values are 'asc for ascending and 'desc for descending."
   :type '(choice (const vertical)
                  (const horizontal)))
 
+(defcustom interleave-split-lines nil
+  "Specify the number of lines the PDF buffer should be increased or decreased. 
+
+If nil both buffers are split equally. If the number is positive,
+the window is enlarged. If the number is negative, the window is
+shrunken.
+
+If `interleave-split-direction' is 'vertical then the number is
+taken as columns."
+  :group 'interleave
+  :type '(choice integer
+                 (const nil)))
+
 ;;; suppress "functions are not known to be defined" warnings
 (declare-function pdf-view-next-page "pdf-view.el")
 (declare-function pdf-view-previous-page "pdf-view.el")
@@ -218,6 +231,10 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
         (progn
           (delete-other-windows)
           (funcall split-window)
+          (when (integerp interleave-split-lines)
+            (if (eql interleave-split-direction 'horizontal)
+                (enlarge-window interleave-split-lines)
+              (enlarge-window-horizontally interleave-split-lines)))
           (find-file (expand-file-name (or (interleave--headline-pdf-path buf)
                                            (interleave--find-pdf-path buf)))))
       ('error
