@@ -31,3 +31,20 @@ Scenario: Switch between notes
   Then I should not see "including Common Lisp"
   And I should see "great"
   And I quit interleave-mode
+
+Scenario: Add note to existing ones
+  Given I open the file "notes.org"
+  And I start interleave-mode
+  When I press "i"
+  And I insert "first note"
+  And I switch to buffer "quotes.pdf"
+  And I press "n"
+  And I press "i"
+  And I insert "some other notes"
+  And I switch to buffer "quotes.pdf"
+  And I press "p"
+  And I press "i"
+  And I insert "second note"
+  Then I should see "first note"
+  And I should see "second note"
+  And I quit interleave-mode
