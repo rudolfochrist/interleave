@@ -55,6 +55,11 @@
 ;;; but fail silently.
 (require 'pdf-tools nil t)
 
+(defgroup interleave nil
+  "Interleaving text books since 2015."
+  :group 'convenience
+  :version "25.1")
+
 ;; Redefining `doc-view-kill-proc-and-buffer' as `interleave-pdf-kill-proc-and-buffer'
 ;; because this function is obsolete in emacs 25.1 onwards.
 (define-obsolete-function-alias 'interleave--pdf-kill-proc-and-buffer 'interleave-pdf-kill-proc-and-buffer "1.3.0")
@@ -142,6 +147,12 @@ The possible values are 'asc for ascending and 'desc for descending."
   :type '(choice (const  asc)
                  (const  desc))
   :group 'interleave)
+
+(defcustom interleave-split-direction 'vertical
+  "Specify how to split the notes buffer."
+  :group 'interleave
+  :type '(choice (const vertical)
+                 (const horizontal)))
 
 ;;; suppress "functions are not known to be defined" warnings
 (declare-function pdf-view-next-page "pdf-view.el")
@@ -510,6 +521,22 @@ SORT-ORDER is either 'asc or 'desc."
                           #'>))
     ('user-error nil)))
 
+(defun interleave--select-split-function ()
+  "Determine which split function to use.
+
+This returns either `split-window-below' or `split-window-right'
+based on a combination of `current-prefix-arg' and
+`interleave-split-direction'."
+  (let ((split-plist (list 'vertical #'split-window-right
+                           'horizontal #'split-window-below))
+        (current-split interleave-split-direction))
+    (plist-get split-plist
+               (if current-prefix-arg
+                   (if (eql current-split 'vertical)
+                       'horizontal
+                     'vertical)
+                 current-split))))
+
 ;;; Interleave
 ;; Minor mode for the org file buffer containing notes
 
@@ -553,6 +580,12 @@ Usage:
 - To insert a note for a page, type `i'.
 - Navigation is the same as in `doc-view-mode'/`pdf-view-mode'.
 
+The split direction is determined by the customizable variable
+`interleave-split-direction'. When `interleave-mode' is invoked
+with a prefix argument the inverse split direction is used
+e.g. if `interleave-split-direction' is 'vertical the buffer is
+split horizontally.
+
 Keybindings (`doc-view-mode'/`pdf-view-mode'):
 
 \\{interleave-pdf-mode-map}
@@ -567,8 +600,7 @@ Keybindings (org-mode buffer):
         (message "Interleave enabled")
         (setq interleave--window-configuration (current-window-configuration))
         (setq interleave-org-buffer (buffer-name))
-        (interleave--open-file (or (and current-prefix-arg #'split-window-below)
-                                   #'split-window-right))
+        (interleave--open-file (interleave--select-split-function))
         (interleave--go-to-page-note 1))
     (progn
       ;; Disable the corresponding minor mode in the PDF file too.
