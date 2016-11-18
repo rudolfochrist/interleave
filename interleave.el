@@ -216,7 +216,6 @@ taken as columns."
     (save-excursion
       (let ((headline (org-element-at-point)))
         (when (and (equal (org-element-type headline) 'headline)
-                   (equal (org-element-property :level headline) 1)
                    (org-entry-get nil interleave--pdf-prop))
           (setq interleave-multi-pdf-notes-file t)
           (org-entry-get nil interleave--pdf-prop))))))
@@ -252,7 +251,7 @@ Consider a headline with property PROPERTY as parent headline."
   (catch 'done
     (if (and (eql (org-element-type (org-element-at-point)) 'headline)
              (org-entry-get (point) property))
-        t
+        (org-element-at-point)
       (condition-case nil
           (org-up-element)
         ('error
@@ -348,26 +347,32 @@ For multi-pdf notes this is the end of the subtree.  For everything else
 this is the end of the buffer"
   (if (not interleave-multi-pdf-notes-file)
       (goto-char (point-max))
-    (interleave--goto-parent-headline interleave--pdf-prop)
-    (org-end-of-subtree)))
+    (prog1
+        (interleave--goto-parent-headline interleave--pdf-prop)
+      (org-end-of-subtree))))
 
-(defun interleave--insert-heading-respect-content ()
+(defun interleave--insert-heading-respect-content (parent-headline)
   "Create a new heading in the notes buffer.
 
 Adjusts the heading level automatically."
   (org-insert-heading-respect-content)
-  (let ((new-heading (org-element-at-point)))
-    (when (and interleave-multi-pdf-notes-file
-               (< (org-element-property :level new-heading) 2))
-      (org-demote))))
+  (when interleave-multi-pdf-notes-file
+    (let* ((parent-level (org-element-property :level parent-headline))
+           (change-level (if (> (org-element-property :level (org-element-at-point))
+                                (1+ parent-level))
+                             #'org-promote
+                           #'org-demote)))
+      (while (/= (org-element-property :level (org-element-at-point))
+                 (1+ parent-level))
+        (funcall change-level)))))
 
 (defun interleave--create-new-note (page)
   "Create a new headline for the page PAGE."
   (with-current-buffer interleave-org-buffer
     (save-excursion
       (widen)
-      (interleave--goto-insert-position)
-      (interleave--insert-heading-respect-content)
+      (let ((position (interleave--goto-insert-position)))
+        (interleave--insert-heading-respect-content position))
       (insert (format "Notes for page %d" page))
       (org-set-property interleave--page-note-prop (number-to-string page))
       (org-narrow-to-subtree)
