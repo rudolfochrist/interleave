@@ -71,3 +71,14 @@ Scenario: Don't slip into other heading while notes syncing
   Then I should see "2 notes 1"
   And I quit interleave-mode
 
+Scenario: Sync pdf page to notes in current subtree of multi-pdf notes document
+  Given I open the file "sync-multi.org"
+  And I go to word "Slides"
+  And I start interleave-mode
+  And I switch to buffer "sync-multi.org"
+  And I widen the buffer 
+  And I go to word "find me 2"
+  When I press "M-."
+  Then the current page should be "3"
+  And I quit interleave-mode
+
