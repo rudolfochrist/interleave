@@ -347,15 +347,15 @@ If POSITION is non-nil move point to it."
     (switch-to-buffer interleave-org-buffer))
   (when (integerp position)
     (goto-char position))
-  (save-restriction
-    (interleave--narrow-to-subtree t)
-    (goto-char (point-max))
-    (unless interleave-disable-narrowing
-      (redisplay))
-    ;; Insert a new line if not already on a new line
-    (when (and insert-newline-maybe
-               (not (looking-back "^ *" (line-beginning-position))))
-      (org-return))))
+  (when insert-newline-maybe
+    (save-restriction
+      (interleave--narrow-to-subtree t)
+      (goto-char (point-max))
+      (unless interleave-disable-narrowing
+        (redisplay))
+      ;; Insert a new line if not already on a new line
+      (when (not (looking-back "^ *" (line-beginning-position)))
+        (org-return)))))
 
 (defun interleave--switch-to-pdf-buffer ()
   "Switch to the pdf buffer."
