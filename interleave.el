@@ -302,6 +302,9 @@ It (possibly) narrows the subtree when found."
       (when (re-search-forward (format "^\[ \t\r\]*\:interleave_page_note\: %s$"
                                        page)
                                nil t)
+        ;; widen the buffer again for the case it is narrowed from
+        ;; multi-pdf notes search. Kinda ugly I know. Maybe a macro helps?
+        (widen) 
         (org-back-to-heading t)
         (interleave--narrow-to-subtree)
         (org-show-subtree)
