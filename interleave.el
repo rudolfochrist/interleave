@@ -280,8 +280,9 @@ function does nothing.
 
 When FORCE is non-nil `interleave-disable-narrowing' is
 ignored."
-  (when (or (not interleave-disable-narrowing)
-            force)
+  (when (and (not (org-before-first-heading-p))
+             (or (not interleave-disable-narrowing)
+                 force))
     (org-narrow-to-subtree)))
 
 (defun interleave--go-to-page-note (page)
