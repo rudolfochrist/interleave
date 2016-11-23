@@ -2,7 +2,7 @@
 
 ;; Author: Sebastian Christ <rudolfo.christ@gmail.com>
 ;; URL: https://github.com/rudolfochrist/interleave
-;; Version: 1.3.20161108-492
+;; Version: 1.4.0
 
 ;; This file is not part of GNU Emacs
 
