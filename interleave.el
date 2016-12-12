@@ -230,24 +230,24 @@ taken as columns."
 
 SPLIT-WINDOW is a function that actually splits the window, so it must be either
 `split-window-right' or `split-window-below'."
-  (let ((buf (current-buffer)))
-    (condition-case nil
-        (progn
-          (delete-other-windows)
-          (funcall split-window)
-          (when (integerp interleave-split-lines)
-            (if (eql interleave-split-direction 'horizontal)
-                (enlarge-window interleave-split-lines)
-              (enlarge-window-horizontally interleave-split-lines)))
-          (find-file (expand-file-name (or (interleave--headline-pdf-path buf)
-                                           (interleave--find-pdf-path buf)))))
-      ('error
-       (let ((pdf-file-name
-              (read-file-name "No #+INTERLEAVE_PDF property found. Please specify path: " "~/")))
-         (find-file (expand-file-name pdf-file-name))
-         (with-current-buffer buf
-           (insert "#+INTERLEAVE_PDF: " pdf-file-name)))))
-    (interleave-pdf-mode 1)))
+  (let* ((buf (current-buffer))
+         (pdf-file-name
+          (or (interleave--headline-pdf-path buf)
+              (interleave--find-pdf-path buf)
+              (let ((filename
+                     (read-file-name "No #+INTERLEAVE_PDF property found. Please specify path: " "~/")))
+                (with-current-buffer buf
+                  (insert "#+INTERLEAVE_PDF: " filename))
+                filename))))
+    (delete-other-windows)
+    (funcall split-window)
+    (when (integerp interleave-split-lines)
+      (if (eql interleave-split-direction 'horizontal)
+          (enlarge-window interleave-split-lines)
+        (enlarge-window-horizontally interleave-split-lines)))
+    (find-file (expand-file-name pdf-file-name))
+    (interleave-pdf-mode 1)
+    pdf-file-name))
 
 (defun interleave--goto-parent-headline (property)
   "Traverse the tree until the parent headline.
@@ -654,19 +654,27 @@ Keybindings (org-mode buffer):
   :lighter " ≡"
   :keymap  interleave-mode-map
   (if interleave-mode
-      (progn
-        (message "Interleave enabled")
-        (setq interleave--window-configuration (current-window-configuration))
-        (setq interleave-org-buffer (buffer-name))
-        (interleave--open-file (interleave--select-split-function))
-        (interleave--go-to-page-note 1))
+      (condition-case nil
+          (progn
+            (setq interleave-org-buffer (buffer-name))
+            (setq interleave--window-configuration (current-window-configuration))
+            (interleave--open-file (interleave--select-split-function))
+            (interleave--go-to-page-note 1)
+            (message "Interleave enabled"))
+        ('quit
+         (interleave-mode -1)))
+    ;; Disable the corresponding minor mode in the PDF file too.
     (progn
-      ;; Disable the corresponding minor mode in the PDF file too.
-      (when (get-buffer interleave-pdf-buffer)
-        (interleave--switch-to-pdf-buffer)
-        (interleave-pdf-mode -1))
-      (message "Interleave mode disabled")
-      (set-window-configuration interleave--window-configuration))))
+      (if (and interleave-pdf-buffer
+               (get-buffer interleave-pdf-buffer))
+          (progn
+            (interleave--switch-to-pdf-buffer)
+            (interleave-pdf-mode -1)
+            (setq interleave-pdf-buffer nil)))
+      (set-window-configuration interleave--window-configuration)
+      (setq interleave--window-configuration nil)
+      (setq interleave-org-buffer nil)
+      (message "Interleave mode disabled"))))
 
 ;;; Interleave PDF Mode
 ;; Minor mode for the pdf file buffer associated with the notes
