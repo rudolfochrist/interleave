@@ -7,8 +7,9 @@ all: compile test
 .PHONY: test-interactive
 test-interactive: clean compile
 	$(CASK) emacs -Q \
-	-L .
+	-L $(PWD) \
 	--eval "(setq emacs-user-directory \"$(EMACSD-LOCAL)\")" \
+	--eval "(require 'interleave)" \
 
 .PHONY: test
 test:
