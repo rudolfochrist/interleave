@@ -570,10 +570,10 @@ SORT-ORDER is either 'asc or 'desc."
   (condition-case nil
       (org-sort-entries nil ?f
                         (lambda ()
-                          (or (string-to-number
-                               (org-entry-get nil
-                                              "interleave_page_note"))
-                              -1))
+                          (let ((page-note (org-entry-get nil "interleave_page_note")))
+                            (if page-note
+                                (string-to-number page-note)
+                              -1)))
                         (if (eq sort-order 'asc)
                             #'<
                           #'>))
