@@ -59,6 +59,10 @@ This will create a new headline for your notes. If some notes are already presen
 
 Typing @@html:<kbd>@@q@@html:</kbd>@@ in the /DocView/ will quit *interleave-mode*.
 
+To customize Interleave you can use the customization interface with
+
+: M-x customize-group RET interleave 
+
 ** Multi-PDF Notes
 
 Normally the notes/PDF relation is bidirectional. This means for every PDF there is one notes file. But it is
@@ -78,6 +82,25 @@ To use =interleave-mode= on this headline, simply place your point onto the head
 to start =interleave-mode= for this subtree.
 
 *Notice that you have to decide. It is not possible to keep multi-PDF and normal notes in the same file.*
+
+** Idiosyncrasies
+
+Interleave does some automated buffer switching for you, especially at start up. This may affect some hooks
+(see [[https://github.com/rudolfochrist/interleave/issues/40][Issue #40]]). This means that even when you start =interleave-mode= in an Org buffer the hooks may be run
+in the newly established =DocView=/=PdfView= buffer.
+
+Interleave provides the variables =interleave-org-buffer= and =interleave-pdf-buffer= to access either the Org
+buffer (the buffer with your notes) or the PDF buffer respectively. Please specify the buffer you'd like to
+use explicitly, like this:
+
+#+BEGIN_SRC emacs-lisp
+(defun my-interleave-hook ()
+  (with-current-buffer interleave-org-buffer
+    ;; Do something meaningful here
+    (message "Hi there. I'm in the org buffer!")))
+
+(add-hook 'interleave-mode-hook #'my-interleave-hook)
+#+END_SRC
 
 * Key-bindings
 
