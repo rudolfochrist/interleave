@@ -9,6 +9,8 @@ test-interactive: clean compile
 	$(CASK) emacs -Q \
 	-L $(PWD) \
 	--eval "(setq emacs-user-directory \"$(EMACSD-LOCAL)\")" \
+	--eval "(push '(width . 231) default-frame-alist)" \
+	--eval "(push '(height . 58) default-frame-alist)" \
 	--eval "(require 'interleave)" \
 
 .PHONY: test
