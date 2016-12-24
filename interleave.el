@@ -664,17 +664,16 @@ Keybindings (org-mode buffer):
         ('quit
          (interleave-mode -1)))
     ;; Disable the corresponding minor mode in the PDF file too.
-    (progn
-      (if (and interleave-pdf-buffer
-               (get-buffer interleave-pdf-buffer))
-          (progn
-            (interleave--switch-to-pdf-buffer)
-            (interleave-pdf-mode -1)
-            (setq interleave-pdf-buffer nil)))
-      (set-window-configuration interleave--window-configuration)
-      (setq interleave--window-configuration nil)
-      (setq interleave-org-buffer nil)
-      (message "Interleave mode disabled"))))
+    (if (and interleave-pdf-buffer
+             (get-buffer interleave-pdf-buffer))
+        (progn
+          (interleave--switch-to-pdf-buffer)
+          (interleave-pdf-mode -1)
+          (setq interleave-pdf-buffer nil)))
+    (set-window-configuration interleave--window-configuration)
+    (setq interleave--window-configuration nil)
+    (setq interleave-org-buffer nil)
+    (message "Interleave mode disabled")))
 
 ;;; Interleave PDF Mode
 ;; Minor mode for the pdf file buffer associated with the notes
