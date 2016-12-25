@@ -366,13 +366,16 @@ If POSITION is non-nil move point to it."
     (goto-char position))
   (when insert-newline-maybe
     (save-restriction
-      (interleave--narrow-to-subtree t)
-      (goto-char (point-max))
-      (unless interleave-disable-narrowing
-        (redisplay))
-      ;; Insert a new line if not already on a new line
-      (when (not (looking-back "^ *" (line-beginning-position)))
-        (org-return)))))
+      (when interleave-disable-narrowing
+        (interleave--narrow-to-subtree t))
+      (interleave--goto-insert-position))
+    ;; Expand again. Sometimes the new content is outside the narrowed
+    ;; region.
+    (org-show-subtree)
+    (redisplay)
+    ;; Insert a new line if not already on a new line
+    (when (not (looking-back "^ *" (line-beginning-position)))
+      (org-return))))
 
 (defun interleave--switch-to-pdf-buffer ()
   "Switch to the pdf buffer."
