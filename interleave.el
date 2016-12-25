@@ -685,12 +685,11 @@ Keybindings (org-mode buffer):
         ('quit
          (interleave-mode -1)))
     ;; Disable the corresponding minor mode in the PDF file too.
-    (if (and interleave-pdf-buffer
-             (get-buffer interleave-pdf-buffer))
-        (progn
-          (interleave--switch-to-pdf-buffer)
-          (interleave-pdf-mode -1)
-          (setq interleave-pdf-buffer nil)))
+    (when (and interleave-pdf-buffer
+               (get-buffer interleave-pdf-buffer))
+      (interleave--switch-to-pdf-buffer)
+      (interleave-pdf-mode -1)
+      (setq interleave-pdf-buffer nil))
     (set-window-configuration interleave--window-configuration)
     (setq interleave--window-configuration nil)
     (setq interleave-org-buffer nil)
