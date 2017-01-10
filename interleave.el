@@ -397,11 +397,10 @@ this is the end of the buffer"
 (defun interleave--insert-heading-respect-content (parent-headline)
   "Create a new heading in the notes buffer.
 
-Adjusts the heading level automatically.  Argument
-PARENT-HEADLINE Adjust the level of the new headline according to
-the PARENT-HEADLINE.
+Adjust the level of the new headline according to the
+PARENT-HEADLINE.  
 
-Returns the position of newly inserted heading."
+Return the position of the newly inserted heading."
   (org-insert-heading-respect-content)
   (when interleave-multi-pdf-notes-file
     (let* ((parent-level (org-element-property :level parent-headline))
