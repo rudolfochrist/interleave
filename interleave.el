@@ -1,4 +1,4 @@
-;;; interleave.el --- Interleaving text books since 2015
+;;; interleave.el --- Interleaving text books since 2015 -*- lexical-binding: t -*-
 
 ;; Author: Sebastian Christ <rudolfo.christ@gmail.com>
 ;; URL: https://github.com/rudolfochrist/interleave
