@@ -680,7 +680,7 @@ Keybindings (org-mode buffer):
                 (interleave--goto-search-position)
                 (if interleave-multi-pdf-notes-file
                     (org-show-subtree) 
-                  (outline-show-all))
+                  (show-all))
                 (org-cycle-hide-drawers 'all)))
             (interleave--go-to-page-note 1)
             (message "Interleave enabled"))
