@@ -402,15 +402,16 @@ PARENT-HEADLINE.
 
 Return the position of the newly inserted heading."
   (org-insert-heading-respect-content)
-  (when interleave-multi-pdf-notes-file
-    (let* ((parent-level (org-element-property :level parent-headline))
-           (change-level (if (> (org-element-property :level (org-element-at-point))
-                                (1+ parent-level))
-                             #'org-promote
-                           #'org-demote)))
-      (while (/= (org-element-property :level (org-element-at-point))
-                 (1+ parent-level))
-        (funcall change-level))))
+  (let* ((parent-level (if interleave-multi-pdf-notes-file
+                           (org-element-property :level parent-headline)
+                         0))
+         (change-level (if (> (org-element-property :level (org-element-at-point))
+                              (1+ parent-level))
+                           #'org-promote
+                         #'org-demote)))
+    (while (/= (org-element-property :level (org-element-at-point))
+               (1+ parent-level))
+      (funcall change-level)))
   (point))
 
 (defun interleave--create-new-note (page)
