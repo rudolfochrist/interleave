@@ -239,11 +239,13 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
          (pdf-file-name
           (or (interleave--headline-pdf-path buf)
               (interleave--find-pdf-path buf))))
-    (when (not pdf-file-name)
+    (unless pdf-file-name
       (setq pdf-file-name
             (read-file-name "No INTERLEAVE_PDF property found. Please specify path: " nil nil t))
       (when interleave-insert-relative-name
         (setq pdf-file-name (file-relative-name pdf-file-name)))
+      ;; Check whether we have any entry at point with `org-entry-properties' before
+      ;; prompting if the user wants multi-pdf.
       (if (and (org-entry-properties) (y-or-n-p "Is this multi-pdf? "))
           (org-entry-put (point) "INTERLEAVE_PDF" pdf-file-name)
         (save-excursion
