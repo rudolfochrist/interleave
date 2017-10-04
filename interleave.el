@@ -172,6 +172,11 @@ taken as columns."
   :group 'interleave
   :type 'boolean)
 
+(defcustom interleave-insert-relative-name t
+  "Whether inserted name should be relative when creating a property."
+  :group 'interleave
+  :type 'boolean)
+
 ;;; suppress "functions are not known to be defined" warnings
 (declare-function pdf-view-next-page "pdf-view.el")
 (declare-function pdf-view-previous-page "pdf-view.el")
@@ -233,12 +238,19 @@ SPLIT-WINDOW is a function that actually splits the window, so it must be either
   (let* ((buf (current-buffer))
          (pdf-file-name
           (or (interleave--headline-pdf-path buf)
-              (interleave--find-pdf-path buf)
-              (let ((filename
-                     (read-file-name "No #+INTERLEAVE_PDF property found. Please specify path: " "~/")))
-                (with-current-buffer buf
-                  (insert "#+INTERLEAVE_PDF: " filename))
-                filename))))
+              (interleave--find-pdf-path buf))))
+    (unless pdf-file-name
+      (setq pdf-file-name
+            (read-file-name "No INTERLEAVE_PDF property found. Please specify path: " nil nil t))
+      (when interleave-insert-relative-name
+        (setq pdf-file-name (file-relative-name pdf-file-name)))
+      ;; Check whether we have any entry at point with `org-entry-properties' before
+      ;; prompting if the user wants multi-pdf.
+      (if (and (org-entry-properties) (y-or-n-p "Is this multi-pdf? "))
+          (org-entry-put (point) "INTERLEAVE_PDF" pdf-file-name)
+        (save-excursion
+          (goto-char (point-min))
+          (insert "#+INTERLEAVE_PDF: " pdf-file-name))))
     (delete-other-windows)
     (funcall split-window)
     (when (integerp interleave-split-lines)
@@ -309,7 +321,7 @@ It (possibly) narrows the subtree when found."
                                  nil t)
           ;; widen the buffer again for the case it is narrowed from
           ;; multi-pdf notes search. Kinda ugly I know. Maybe a macro helps?
-          (widen) 
+          (widen)
           (org-back-to-heading t)
           (interleave--narrow-to-subtree)
           (org-show-subtree)
@@ -398,7 +410,7 @@ this is the end of the buffer"
   "Create a new heading in the notes buffer.
 
 Adjust the level of the new headline according to the
-PARENT-HEADLINE.  
+PARENT-HEADLINE.
 
 Return the position of the newly inserted heading."
   (org-insert-heading-respect-content)
@@ -436,7 +448,7 @@ buffer."
   (interactive)
   (let* ((page (funcall interleave-pdf-current-page-fn))
          (position (interleave--go-to-page-note page)))
-    (if position 
+    (if position
         (interleave--switch-to-org-buffer t position)
       (interleave--create-new-note page))))
 
@@ -680,7 +692,7 @@ Keybindings (org-mode buffer):
               (with-current-buffer interleave-org-buffer
                 (interleave--goto-search-position)
                 (if interleave-multi-pdf-notes-file
-                    (org-show-subtree) 
+                    (org-show-subtree)
                   (show-all))
                 (org-cycle-hide-drawers 'all)))
             (interleave--go-to-page-note 1)
