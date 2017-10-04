@@ -29,6 +29,7 @@ before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3
+  - ln -s /var/lib/dbus/machine-id /etc/machine-id
   - wget 'https://raw.githubusercontent.com/flycheck/emacs-travis/master/emacs-travis.mk'
   - make -f emacs-travis.mk install_texinfo
   - make -f emacs-travis.mk EMACSCONFFLAGS="" install_emacs
