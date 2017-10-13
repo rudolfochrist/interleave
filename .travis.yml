@@ -10,6 +10,7 @@ addons:
       - libjpeg-dev
       - libtiff4-dev
       - libacl1-dev
+      - dbus
 
 env:
   global:
