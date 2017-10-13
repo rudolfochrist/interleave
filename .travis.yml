@@ -27,8 +27,6 @@ matrix:
     - env: EMACS_VERSION=snapshot
 
 before_install:
-  # https://github.com/conda/conda-recipes/commit/e8b4bc140f70b382ba26f726d7d81ef98029e78e
-  - od -N16 -An -tx1 < /dev/random | tr -d '[:space:]' > ${PREFIX}/var/lib/dbus/machine-id
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3
