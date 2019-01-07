@@ -351,18 +351,20 @@ It (possibly) narrows the subtree when found."
 (defun interleave-scroll-up ()
   "Scroll up the PDF.  Look up for available notes."
   (interactive)
-  (setq interleave-page-marker (funcall interleave-pdf-current-page-fn))
-  (funcall interleave-pdf-scroll-up-or-next-page-fn)
-  (unless (= interleave-page-marker (funcall interleave-pdf-current-page-fn))
-    (interleave--go-to-page-note (funcall interleave-pdf-current-page-fn))))
+  (with-selected-window (display-buffer interleave-pdf-buffer)
+    (setq interleave-page-marker (funcall interleave-pdf-current-page-fn))
+    (funcall interleave-pdf-scroll-up-or-next-page-fn)
+    (unless (= interleave-page-marker (funcall interleave-pdf-current-page-fn))
+      (interleave--go-to-page-note (funcall interleave-pdf-current-page-fn)))))
 
 (defun interleave-scroll-down ()
   "Scroll down the PDF.  Look up for available notes."
   (interactive)
-  (setq interleave-page-marker (funcall interleave-pdf-current-page-fn))
-  (funcall interleave-pdf-scroll-down-or-previous-page-fn)
-  (unless (= interleave-page-marker (funcall interleave-pdf-current-page-fn))
-    (interleave--go-to-page-note (funcall interleave-pdf-current-page-fn))))
+  (with-selected-window (display-buffer interleave-pdf-buffer)
+    (setq interleave-page-marker (funcall interleave-pdf-current-page-fn))
+    (funcall interleave-pdf-scroll-down-or-previous-page-fn)
+    (unless (= interleave-page-marker (funcall interleave-pdf-current-page-fn))
+      (interleave--go-to-page-note (funcall interleave-pdf-current-page-fn)))))
 
 (defun interleave--switch-to-org-buffer (&optional insert-newline-maybe position)
   "Switch to the notes buffer.
@@ -416,7 +418,7 @@ Return the position of the newly inserted heading."
   (org-insert-heading-respect-content)
   (let* ((parent-level (if interleave-multi-pdf-notes-file
                            (org-element-property :level parent-headline)
-                         0))
+                         (or (org-up-heading-safe) 0)))
          (change-level (if (> (org-element-property :level (org-element-at-point))
                               (1+ parent-level))
                            #'org-promote
@@ -730,6 +732,8 @@ Keybindings (org-mode buffer):
 (define-key interleave-mode-map (kbd "M-.") #'interleave-sync-pdf-page-current)
 (define-key interleave-mode-map (kbd "M-p") #'interleave-sync-pdf-page-previous)
 (define-key interleave-mode-map (kbd "M-n") #'interleave-sync-pdf-page-next)
+(define-key interleave-mode-map (kbd "C-j") #'interleave-scroll-up)
+(define-key interleave-mode-map (kbd "C-k") #'interleave-scroll-down)
 
 (define-key interleave-pdf-mode-map (kbd "n")     #'interleave-go-to-next-page)
 (define-key interleave-pdf-mode-map (kbd "p")     #'interleave-go-to-previous-page)
