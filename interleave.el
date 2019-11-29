@@ -567,6 +567,8 @@ of .pdf)."
                                   (make-directory org-file-create-dir))
                                 (expand-file-name org-file-name-sans-directory
                                                   org-file-create-dir))))
+        (when interleave-insert-relative-name
+          (setq pdf-file-name (file-relative-name pdf-file-name)))
         (with-temp-file org-file-name
           (insert "#+INTERLEAVE_PDF: " pdf-file-name)))
       ;; Open the notes org file and enable `interleave-mode'
