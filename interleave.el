@@ -217,8 +217,9 @@ taken as columns."
       (widen)
       (save-excursion
         (goto-char (point-min))
-        (when (re-search-forward "^#\\+interleave_pdf: \\(.*\\)" nil :noerror)
-          (match-string 1))))))
+        (when (re-search-forward (org-make-options-regexp '("interleave_pdf")) nil :noerror)
+          (match-string 2))))))
+
 
 (defun interleave--headline-pdf-path (buffer)
   "Return the INTERLEAVE_PDF property of the current headline in BUFFER."
