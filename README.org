@@ -1,6 +1,10 @@
 [[http://melpa.org/#/interleave][file:http://melpa.org/packages/interleave-badge.svg]]
 [[https://travis-ci.org/rudolfochrist/interleave][file:https://travis-ci.org/rudolfochrist/interleave.svg?branch=master]]
 
+* IMPORTANT
+
+This package is not maintained anymore. User should go and checkout [[https://github.com/weirdNox/org-noter][weirdNox/org-noter]] as an alternative. 
+
 * Interleaved Textbooks?
 
 Some history, what this is all about...
